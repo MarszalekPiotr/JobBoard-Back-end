@@ -9,6 +9,7 @@ namespace JobBoard.Domain.Entities
 {
     public class CompanyAccount: BaseAccount
     {
-        public required string NIP {get; set; }
+       public required string NIP {get; set; }
+       public ICollection<CompanyAccountUser> CompanyAccountUsers { get; set; }  = new List<CompanyAccountUser>();
     }
 }

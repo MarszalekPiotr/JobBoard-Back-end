@@ -1,3 +1,4 @@
+using JobBoard.Infrastructure.Persistance;
 using Serilog;
 
 namespace JobBoard.WebApi
@@ -32,7 +33,7 @@ namespace JobBoard.WebApi
 
 
             // Add services to the container.
-
+            builder.Services.AddSqlDatabase(builder.Configuration.GetConnectionString("MainDbConnectionString")!);
             builder.Services.AddControllers();
 
             var app = builder.Build();

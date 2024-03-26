@@ -12,7 +12,7 @@ namespace JobBoard.Domain.Entities
         public required string Email { get; set; }
         public required string HashedPassword { get; set; }
         public DateTimeOffset RegisterDate {  get; set; }
-        public ICollection<CompanyAccount> CompanyAccounts { get; set; } = new List<CompanyAccount>();
+        public ICollection<CompanyAccountUser> CompanyAccountsUsers { get; set; } = new List<CompanyAccountUser>();
         public CandidateAcccount CandidateAcccount { get; set; } = default!;
     }
 }
