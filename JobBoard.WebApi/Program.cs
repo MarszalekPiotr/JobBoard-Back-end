@@ -20,7 +20,10 @@ namespace JobBoard.WebApi
 
 
             var builder = WebApplication.CreateBuilder(args);
-
+            if (builder.Environment.IsDevelopment())
+            {
+                builder.Configuration.AddJsonFile("appsettings.Development.local.json");
+            }
 
             // Add SerLog configuration to DI container
             builder.Host.UseSerilog((context, services, configuration) => configuration
