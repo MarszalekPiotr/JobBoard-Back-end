@@ -1,3 +1,4 @@
+using JobBoard.Application.Logic.Abstractions;
 using JobBoard.Infrastructure.Persistance;
 using Serilog;
 
@@ -25,6 +26,8 @@ namespace JobBoard.WebApi
                 builder.Configuration.AddJsonFile("appsettings.Development.local.json");
             }
 
+
+
             // Add SerLog configuration to DI container
             builder.Host.UseSerilog((context, services, configuration) => configuration
             .Enrich.WithProperty("Application", _APP_NAME)
@@ -35,9 +38,15 @@ namespace JobBoard.WebApi
             );
 
 
+
             // Add services to the container.
             builder.Services.AddSqlDatabase(builder.Configuration.GetConnectionString("MainDbConnectionString")!);
             builder.Services.AddControllers();
+
+            builder.Services.AddMediatR(c =>
+            {
+                c.RegisterServicesFromAssemblyContaining(typeof(BaseCommandHandler));
+            });
 
             var app = builder.Build();
 
