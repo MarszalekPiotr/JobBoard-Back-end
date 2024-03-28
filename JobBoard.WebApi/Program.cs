@@ -1,6 +1,7 @@
 using JobBoard.Application.Logic.Abstractions;
 using JobBoard.Infrastructure.Persistance;
 using Serilog;
+using JobBoard.WebApi.DI;
 
 namespace JobBoard.WebApi
 {
@@ -48,9 +49,13 @@ namespace JobBoard.WebApi
                 c.RegisterServicesFromAssemblyContaining(typeof(BaseCommandHandler));
             });
 
+            
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
+
+            app.UseExceptionResultMiddleware();
 
             app.UseAuthorization();
 
