@@ -12,7 +12,7 @@ namespace JobBoard.Application.Interfaces
     {
         DbSet<User> Users { get; set; }
         DbSet<CandidateAcccount> candidateAcccounts { get; set; }
-        DbSet<CompanyAccountUser> companyAccounts { get; set; }
+        DbSet<CompanyAccount> companyAccounts { get; set; }
         DbSet<CompanyAccountUser> companyAccountUsers { get; set; }
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }

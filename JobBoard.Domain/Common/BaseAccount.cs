@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace JobBoard.Domain.Common
 {
-    public abstract  class BaseAccount: DomainEntity
-    {
+    public abstract  class BaseAccount
+    { 
+        public Guid Id { get; set; }
         public required string Name { get; set; }
         public required DateTimeOffset CreationDate { get; set; }
         public string Description { get; set; } = string.Empty;

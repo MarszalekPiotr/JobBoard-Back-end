@@ -2,6 +2,8 @@ using JobBoard.Application.Logic.Abstractions;
 using JobBoard.Infrastructure.Persistance;
 using Serilog;
 using JobBoard.WebApi.DI;
+using JobBoard.Infrastructure.Auth;
+using JobBoard.WebApi.Application.Auth;
 
 namespace JobBoard.WebApi
 {
@@ -39,16 +41,18 @@ namespace JobBoard.WebApi
             );
 
 
-
+            builder.Services.AddHttpContextAccessor();
             // Add services to the container.
             builder.Services.AddSqlDatabase(builder.Configuration.GetConnectionString("MainDbConnectionString")!);
+            builder.Services.AddJWTAuthenticationDataProvider(builder.Configuration);
             builder.Services.AddControllers();
 
             builder.Services.AddMediatR(c =>
             {
                 c.RegisterServicesFromAssemblyContaining(typeof(BaseCommandHandler));
             });
-
+            builder.Services.Configure<JWTAuthenticationOptions>(builder.Configuration.GetSection("JwtAuthentication"));
+            builder.Services.AddJwtAuth();
             
 
             var app = builder.Build();

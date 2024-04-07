@@ -9,7 +9,7 @@ namespace JobBoard.Domain.Entities
 {
     public class CompanyAccountUser: DomainEntity
     {   
-        public int  CompanyAccountId { get; set; }
+        public Guid  CompanyAccountId { get; set; }
         public CompanyAccount CompanyAccount { get; set; } = default!;
         public int UserId { get; set; }
         public User User { get; set; } = default!;
