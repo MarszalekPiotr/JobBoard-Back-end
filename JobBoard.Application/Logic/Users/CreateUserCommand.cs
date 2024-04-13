@@ -1,4 +1,5 @@
-﻿using JobBoard.Application.Exceptions;
+﻿using FluentValidation;
+using JobBoard.Application.Exceptions;
 using JobBoard.Application.Interfaces;
 using JobBoard.Application.Logic.Abstractions;
 using JobBoard.Domain.Entities;
@@ -40,7 +41,7 @@ namespace JobBoard.Application.Logic.Users
                 {
                     throw new ErrorException("User With this Email already exists");
                 }
-                var user = new User() {  Email = request.Email,HashedPassword ="" };
+                var user = new User() {  Email = request.Email,RegisterDate = DateTime.UtcNow,HashedPassword ="" };
                 var hashedPassword = _passwordManager.HashPassword(request.Password);
                 user.HashedPassword = hashedPassword;
                 await _applicationDbContext.Users.AddAsync(user);
@@ -49,6 +50,22 @@ namespace JobBoard.Application.Logic.Users
                 return result;
           
                 
+            }
+        }
+
+        public class Validator : AbstractValidator<Request>
+        {
+            public Validator()
+            {   
+                // Password Validation Confiuration
+                RuleFor(x => x.Password).NotEmpty();
+                RuleFor(x => x.Password).MaximumLength(50);
+                RuleFor(x => x.Password).MinimumLength(8);
+
+                // Email Validation Configuration
+                RuleFor(x => x.Email).EmailAddress();
+                RuleFor(x => x.Email).NotEmpty();
+               
             }
         }
     }

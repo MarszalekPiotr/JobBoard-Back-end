@@ -9,7 +9,7 @@ namespace JobBoard.WebApi.Controllers
     [ApiController]
     public class UserController : BaseController
     {
-        public UserController(ILogger logger, IMediator mediator) : base(logger, mediator)
+        public UserController(ILogger<UserController> logger, IMediator mediator) : base(logger, mediator)
         {
         }
 

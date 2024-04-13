@@ -4,6 +4,7 @@ using Serilog;
 using JobBoard.WebApi.DI;
 using JobBoard.Infrastructure.Auth;
 using JobBoard.WebApi.Application.Auth;
+using JobBoard.Application.DI;
 
 namespace JobBoard.WebApi
 {
@@ -34,7 +35,7 @@ namespace JobBoard.WebApi
             // Add SerLog configuration to DI container
             builder.Host.UseSerilog((context, services, configuration) => configuration
             .Enrich.WithProperty("Application", _APP_NAME)
-            .Enrich.WithProperty("MacineName", Environment.MachineName)
+            .Enrich.WithProperty("MachineName", Environment.MachineName)
             .ReadFrom.Configuration(context.Configuration)
             .ReadFrom.Services(services)
             .Enrich.FromLogContext()
@@ -53,11 +54,33 @@ namespace JobBoard.WebApi
             {
                 c.RegisterServicesFromAssemblyContaining(typeof(BaseCommandHandler));
             });
+            builder.Services.AddSwaggerGen(o =>
+            {
+                o.CustomSchemaIds(x =>
+                {
+                    var name = x.FullName;
+                    if (name != null)
+                    {
+                        name = name.Replace("+", "_"); // swagger bug fix
+                    }
+
+                    return name;
+                });
+            });
+
             builder.Services.Configure<JWTAuthenticationOptions>(builder.Configuration.GetSection("JwtAuthentication"));
             builder.Services.AddJwtAuth();
+
+            builder.Services.AddValidators();
             
 
             var app = builder.Build();
+
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
 
             // Configure the HTTP request pipeline.
 
