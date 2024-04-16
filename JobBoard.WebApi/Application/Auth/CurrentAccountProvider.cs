@@ -26,7 +26,8 @@ namespace JobBoard.Infrastructure.Auth
         {
             var accountCookie = _httpContextAccessor.HttpContext?.Request.Cookies[CookieSettings.AccountIdCookieName];
             if (Guid.TryParse(accountCookie, out Guid accountId))
-            {
+            {   
+
                 return  accountId;
             }
             return Guid.Empty;
