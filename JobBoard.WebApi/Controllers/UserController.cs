@@ -64,5 +64,20 @@ namespace JobBoard.WebApi.Controllers
 
             Response.Cookies.Append(CookieSettings.CookieName, token, cookieOption);
         }
+
+        public async Task<ActionResult> Logout()
+        {
+            var result = _mediator.Send(new LogoutCommand.Request());
+            DeleteTokenFromCookie();
+            return Ok(result);
+        }
+
+        private void DeleteTokenFromCookie()
+        {
+            Response.Cookies.Delete(CookieSettings.CookieName, new CookieOptions()
+            {
+                HttpOnly = true
+            });
+        }
     }
 }
