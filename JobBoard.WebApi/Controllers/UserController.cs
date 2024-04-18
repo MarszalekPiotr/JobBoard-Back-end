@@ -65,10 +65,18 @@ namespace JobBoard.WebApi.Controllers
             Response.Cookies.Append(CookieSettings.CookieName, token, cookieOption);
         }
 
+        [HttpPost]
         public async Task<ActionResult> Logout()
         {
-            var result = _mediator.Send(new LogoutCommand.Request());
+            var result = await  _mediator.Send(new LogoutCommand.Request());
             DeleteTokenFromCookie();
+            return Ok(result);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetCurrentUser()
+        {
+            var result =  await _mediator.Send(new CurrentUserQuery.Request());
             return Ok(result);
         }
 
