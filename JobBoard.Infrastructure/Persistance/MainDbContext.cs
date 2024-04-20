@@ -16,7 +16,7 @@ namespace JobBoard.Infrastructure.Persistance
 
         }
        public DbSet<User> Users { get; set; }
-       public  DbSet<CandidateAcccount> candidateAcccounts { get; set; }
+       public  DbSet<CandidateAcccount> CandidateAccounts { get; set; }
        public DbSet<CompanyAccount> companyAccounts { get; set; }
        public DbSet<CompanyAccountUser> companyAccountUsers { get; set; }
         protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)

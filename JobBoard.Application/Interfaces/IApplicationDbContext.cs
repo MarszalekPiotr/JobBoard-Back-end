@@ -11,7 +11,7 @@ namespace JobBoard.Application.Interfaces
     public interface IApplicationDbContext
     {
         DbSet<User> Users { get; set; }
-        DbSet<CandidateAcccount> candidateAcccounts { get; set; }
+        DbSet<CandidateAcccount> CandidateAccounts { get; set; }
         DbSet<CompanyAccount> companyAccounts { get; set; }
         DbSet<CompanyAccountUser> companyAccountUsers { get; set; }
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);

@@ -17,7 +17,9 @@ namespace JobBoard.Application.Interfaces
       Task<CompanyAccount> GetCurrentCompanyAccount();
       Task<EnumAccountType> GetAccountType();
       Task<Guid> GetAccountId();
-       
-      
+       bool AccountBelongsToCurrentUser(Guid accountId);
+
+
+
     }
 }

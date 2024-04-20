@@ -87,5 +87,62 @@ namespace JobBoard.WebApi.Controllers
                 HttpOnly = true
             });
         }
+
+        [HttpGet]
+        public async Task<ActionResult> GetCurrentCandidateAccount()
+        {
+            var result = await _mediator.Send(new CurrentCandidateAccountQuery.Request());
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> CreateCandidateAccount([FromBody] CreateCandidateAccountCommand.Request model)
+        {
+            var result = await _mediator.Send(model);
+            SetAccountCookie(result.AccountId); 
+            return Ok(result);
+        }
+        private void SetAccountCookie(Guid AccountId)
+        {
+            var cookieOption = new CookieOptions()
+            {
+                HttpOnly = true,
+                Secure = true,
+                Expires = DateTime.Now.AddDays(30),
+                SameSite = SameSiteMode.Lax,
+            };
+
+            if (_cookieSettings != null)
+            {
+                cookieOption = new CookieOptions()
+                {
+                    HttpOnly = cookieOption.HttpOnly,
+                    Expires = cookieOption.Expires,
+                    Secure = _cookieSettings.Value.Secure,
+                    SameSite = _cookieSettings.Value.SameSite,
+                };
+            }
+
+            Response.Cookies.Append(CookieSettings.AccountIdCookieName, AccountId.ToString(), cookieOption);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetAccountsForCurrentUser()
+        {
+            var result = await _mediator.Send(new GetAccountsOfCurrentUserQuery.Request());
+            return Ok(result.accountResults);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> SetCurrentAccount(SetCurrentAccountCommand.Request model)
+        {
+            var result = await _mediator.Send(model);
+            // useless if?
+            if(result != null)
+            {
+                SetAccountCookie(model.AccountId);
+            }
+            return Ok(result);
+        }
     }
 }
