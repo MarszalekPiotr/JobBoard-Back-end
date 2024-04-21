@@ -6,6 +6,8 @@ using JobBoard.Infrastructure.Auth;
 using JobBoard.WebApi.Application.Auth;
 using JobBoard.Application.DI;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json.Serialization;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace JobBoard.WebApi
 {
@@ -57,6 +59,10 @@ namespace JobBoard.WebApi
                     options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
                 }
             });
+
+            builder.Services.AddControllers()
+            .AddJsonOptions(options =>
+            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
             builder.Services.AddMediatR(c =>
             {
