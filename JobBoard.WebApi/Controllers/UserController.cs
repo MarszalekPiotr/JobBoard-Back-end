@@ -3,6 +3,7 @@ using JobBoard.Infrastructure.Auth;
 using JobBoard.WebApi.Application.Auth;
 using JobBoard.WebApi.Application.Response;
 using MediatR;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -15,13 +16,22 @@ namespace JobBoard.WebApi.Controllers
     {
         private readonly JWTManager _jWTManager;
         private readonly IOptions<CookieSettings> _cookieSettings;
-        public UserController(ILogger<UserController> logger, IMediator mediator, JWTManager jWTManager, IOptions<CookieSettings> cookieSettings) : base(logger, mediator)
+        private readonly IAntiforgery _antiForgery;
+        public UserController(ILogger<UserController> logger, IMediator mediator, JWTManager jWTManager, IOptions<CookieSettings> cookieSettings, IAntiforgery antiForgery) : base(logger, mediator)
         {
             _jWTManager = jWTManager;
             _cookieSettings = cookieSettings;
+            _antiForgery = antiForgery;
+        }
+        [HttpGet]
+        public async Task<ActionResult> AntiForegryToken()
+        {
+            var tokens = _antiForgery.GetAndStoreTokens(HttpContext);
+            return Ok(tokens.RequestToken);
         }
 
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public async Task<ActionResult> CreateUser([FromBody] CreateUserCommand.Request model)
         {
             var createUserResult = await _mediator.Send(model);

@@ -5,6 +5,7 @@ using JobBoard.WebApi.DI;
 using JobBoard.Infrastructure.Auth;
 using JobBoard.WebApi.Application.Auth;
 using JobBoard.Application.DI;
+using Microsoft.AspNetCore.Mvc;
 
 namespace JobBoard.WebApi
 {
@@ -49,7 +50,13 @@ namespace JobBoard.WebApi
             builder.Services.AddJWTAuthenticationDataProvider(builder.Configuration);
             builder.Services.AddCurrentAccountProvider();
             builder.Services.AddPasswordManager();
-            builder.Services.AddControllers();
+            builder.Services.AddControllersWithViews(options =>
+            {
+                if (!builder.Environment.IsDevelopment())
+                {
+                    options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+                }
+            });
 
             builder.Services.AddMediatR(c =>
             {
@@ -67,6 +74,10 @@ namespace JobBoard.WebApi
 
                     return name;
                 });
+            });
+
+            builder.Services.AddAntiforgery(o => {
+                o.HeaderName = "X-XSRF-TOKEN";
             });
 
             builder.Services.Configure<JWTAuthenticationOptions>(builder.Configuration.GetSection("JwtAuthentication"));
