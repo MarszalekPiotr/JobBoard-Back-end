@@ -134,13 +134,24 @@ namespace JobBoard.WebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> SetCurrentAccount(SetCurrentAccountCommand.Request model)
+        public async Task<ActionResult> SetCurrentAccount([FromBody] SetCurrentAccountCommand.Request model)
         {
             var result = await _mediator.Send(model);
             // useless if?
             if(result != null)
             {
                 SetAccountCookie(model.AccountId);
+            }
+            return Ok(result);
+        }
+        [HttpPost]
+        public async Task<ActionResult> CreateCompanyAccount([FromBody] CreateCompanyAccountComand.Request model)
+        {
+            var result = await  _mediator.Send(model);
+            if(result != null)
+            {
+                SetAccountCookie(result.AccountId);
+
             }
             return Ok(result);
         }

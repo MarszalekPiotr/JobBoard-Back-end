@@ -44,6 +44,7 @@ namespace JobBoard.WebApi
 
             builder.Services.AddHttpContextAccessor();
             // Add services to the container.
+            builder.Services.AddCache();
             builder.Services.AddSqlDatabase(builder.Configuration.GetConnectionString("MainDbConnectionString")!);
             builder.Services.AddJWTAuthenticationDataProvider(builder.Configuration);
             builder.Services.AddCurrentAccountProvider();
