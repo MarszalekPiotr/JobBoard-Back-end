@@ -73,7 +73,8 @@ namespace JobBoard.WebApi
             builder.Services.AddJwtAuth();
 
             builder.Services.AddValidators();
-            
+
+            builder.Services.AddCors();
 
             var app = builder.Build();
 
@@ -84,8 +85,18 @@ namespace JobBoard.WebApi
             }
 
             // Configure the HTTP request pipeline.
+            // Cors must be first middleware 
+            app.UseCors(builder => builder
+        .   WithOrigins(app.Configuration.GetValue<string>("WebAppBaseUrl") ?? "")
+        .   WithOrigins(app.Configuration.GetSection("AdditionalCorsOrigins").Get<string[]>() ?? new string[0])
+           .WithOrigins((Environment.GetEnvironmentVariable("AdditionalCorsOrigins") ?? "").Split(',').Where(h => !string.IsNullOrEmpty(h)).Select(h => h.Trim()).ToArray())
+           .AllowAnyHeader()
+           .AllowCredentials()
+           .AllowAnyMethod());
 
             app.UseExceptionResultMiddleware();
+
+
 
             app.UseAuthorization();
 
