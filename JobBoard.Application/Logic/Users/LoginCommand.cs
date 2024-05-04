@@ -46,9 +46,9 @@ namespace JobBoard.Application.Logic.Users
                         return new Result() { UserId = user.Id };
                     }
                 }
-
-                throw new Exception("Invalid login or password");
-                
+                // or just exception? 
+                throw new ErrorException("Invalid login or password");
+               
 
             }
         }

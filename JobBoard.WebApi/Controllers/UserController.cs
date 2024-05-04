@@ -105,6 +105,7 @@ namespace JobBoard.WebApi.Controllers
             return Ok(result);
         }
 
+
         [HttpPost]
         public async Task<ActionResult> CreateCandidateAccount([FromBody] CreateCandidateAccountCommand.Request model)
         {
@@ -165,5 +166,14 @@ namespace JobBoard.WebApi.Controllers
             }
             return Ok(result);
         }
+
+        public async Task<ActionResult> GetCurrentCompanyAccount()
+        {
+            var result = await _mediator.Send(new GetCurrentCompanyAccountQuery.Request());
+            return Ok(result);
+        }
+
+
+
     }
 }
