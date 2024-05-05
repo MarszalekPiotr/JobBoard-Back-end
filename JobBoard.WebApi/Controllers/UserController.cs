@@ -80,6 +80,7 @@ namespace JobBoard.WebApi.Controllers
         {
             var result = await  _mediator.Send(new LogoutCommand.Request());
             DeleteTokenFromCookie();
+            DeleteAccountIdFromCookie();
             return Ok(result);
         }
 
@@ -88,6 +89,14 @@ namespace JobBoard.WebApi.Controllers
         {
             var result =  await _mediator.Send(new CurrentUserQuery.Request());
             return Ok(result);
+        }
+
+        private void DeleteAccountIdFromCookie()
+        {
+            Response.Cookies.Delete(CookieSettings.AccountIdCookieName, new CookieOptions()
+            {
+                HttpOnly = true
+            });
         }
 
         private void DeleteTokenFromCookie()

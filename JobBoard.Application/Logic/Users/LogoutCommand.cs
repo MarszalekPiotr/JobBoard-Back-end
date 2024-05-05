@@ -19,7 +19,7 @@ namespace JobBoard.Application.Logic.Users
 
         public class Result
         {
-           
+           public string result = string.Empty;
         }
 
         public class Handler : BaseCommandHandler, IRequestHandler<Request, Result>
