@@ -24,6 +24,7 @@ namespace JobBoard.Application.Logic.Users
         {
             public Guid AccountId { get; set; }
             public EnumAccountType AccountType { get; set; }
+            public string AccountName { get; set; }
         }
         public class Result
         {
@@ -45,13 +46,13 @@ namespace JobBoard.Application.Logic.Users
                 {
                     var candidateAccounts = _applicationDbContext.CandidateAccounts
                         .Where(ca => ca.UserId  == userId)?
-                        .Select(ca => new AccountResult() { AccountId = ca.Id, AccountType = EnumAccountType.CandidateAccount }
+                        .Select(ca => new AccountResult() { AccountId = ca.Id, AccountType = EnumAccountType.CandidateAccount, AccountName = ca.Name + " " + ca.SurName }
                    );
 
                     var companyAccounts = _applicationDbContext.companyAccountUsers.Where(cau => cau.UserId == userId)?
-                        .Select(cau => new AccountResult() { AccountId = cau.CompanyAccountId, AccountType = EnumAccountType.CompanyAccount });
+                        .Select(cau => new AccountResult() { AccountId = cau.CompanyAccountId, AccountType = EnumAccountType.CompanyAccount, AccountName = _applicationDbContext.companyAccounts.FirstOrDefault(x => x.Id == cau.CompanyAccountId).Name?? "" });
 
-                    var allAccounts = candidateAccounts.Union(companyAccounts)?.ToList();
+                    var allAccounts = candidateAccounts?.Union(companyAccounts)?.ToList();
                     if(allAccounts == null)
                     {
                         allAccounts = new List<AccountResult>();

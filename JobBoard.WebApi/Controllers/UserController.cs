@@ -167,6 +167,7 @@ namespace JobBoard.WebApi.Controllers
             return Ok(result);
         }
 
+        [HttpGet]
         public async Task<ActionResult> GetCurrentCompanyAccount()
         {
             var result = await _mediator.Send(new GetCurrentCompanyAccountQuery.Request());
