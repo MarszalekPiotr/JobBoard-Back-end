@@ -81,7 +81,7 @@ namespace JobBoard.Infrastructure.Auth
         public async  Task<CompanyAccount> GetCurrentCompanyAccount()
         {
             var accountId = await this.GetAccountId();
-            if (await this.GetAccountType() == EnumAccountType.CandidateAccount)
+            if (await this.GetAccountType() == EnumAccountType.CompanyAccount)
             {
                 return _applicationDbContext.companyAccounts.FirstOrDefault(x => x.Id == accountId);
             }
