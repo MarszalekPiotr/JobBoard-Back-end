@@ -14,5 +14,6 @@ namespace JobBoard.Domain.Entities
         public string PhoneNumber { get; set; } = string.Empty;
         public int UserId { get; set; }
         public User User { get; set; } = default!;
+        public ICollection<JobApplication> JobApplications { get; set; } = new List<JobApplication>();
     }
 }

@@ -116,6 +116,7 @@ namespace JobBoard.WebApi.Controllers
 
 
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public async Task<ActionResult> CreateCandidateAccount([FromBody] CreateCandidateAccountCommand.Request model)
         {
             var result = await _mediator.Send(model);
@@ -165,6 +166,7 @@ namespace JobBoard.WebApi.Controllers
             return Ok(result);
         }
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public async Task<ActionResult> CreateCompanyAccount([FromBody] CreateCompanyAccountComand.Request model)
         {
             var result = await  _mediator.Send(model);
