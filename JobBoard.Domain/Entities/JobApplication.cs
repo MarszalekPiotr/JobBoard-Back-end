@@ -18,6 +18,6 @@ namespace JobBoard.Domain.Entities
 
         public required Guid CandidateAccountId { get; set; }
         public CandidateAcccount CandidateAcccount { get; set; } = default!;
-
+        public FormFilling FormFilling { get; set; } = default!;
     }
 }

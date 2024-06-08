@@ -1,5 +1,7 @@
 ﻿using JobBoard.Domain.Common;
 using JobBoard.Domain.Enums;
+
+using JobBoard.Domain.FormDefinitionSchema;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +21,7 @@ namespace JobBoard.Domain.Entities
         public required EnumWorkMode WorkingMode { get; set; }
         public required EnumContractType ContractType { get; set; }
 
-        // FormDefinition JSON 
+        public FormDefinition FormDefinitionJSON { get; set; } = new FormDefinition();
         public required Guid CompanyAccountId { get; set; }
         public required CompanyAccount CompanyAccount {  get; set; } 
 

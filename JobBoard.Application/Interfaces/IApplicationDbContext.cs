@@ -14,6 +14,13 @@ namespace JobBoard.Application.Interfaces
         DbSet<CandidateAcccount> CandidateAccounts { get; set; }
         DbSet<CompanyAccount> companyAccounts { get; set; }
         DbSet<CompanyAccountUser> companyAccountUsers { get; set; }
+        DbSet<Offer> Offers { get; set; }
+        DbSet<JobApplication> JobApplications { get; set; }
+        DbSet<Tag> Tags { get; set; }
+        DbSet<Category> Categories {  get; set; } 
+        DbSet<OfferTag> OfferTags { get; set; }
+        DbSet<FormFilling> FormFillings { get; set; }
+        DbSet<FieldFilling> FieldFillings { get; set; } 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 }

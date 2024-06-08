@@ -10,8 +10,9 @@ namespace JobBoard.Domain.Entities
     public class FormFilling : DomainEntity 
     {
         public int JobApplicationId { get; set; }
+        public JobApplication JobApplication { get; set; }
         public DateTimeOffset FillingDate { get; set; }
 
-        ICollection<FieldFilling> FieldFillings { get; set; }  = new List<FieldFilling>();
+        public  ICollection<FieldFilling> FieldFillings { get; set; }  = new List<FieldFilling>();
     }
 }

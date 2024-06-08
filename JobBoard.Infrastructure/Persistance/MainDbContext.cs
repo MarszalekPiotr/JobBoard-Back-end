@@ -19,6 +19,14 @@ namespace JobBoard.Infrastructure.Persistance
        public  DbSet<CandidateAcccount> CandidateAccounts { get; set; }
        public DbSet<CompanyAccount> companyAccounts { get; set; }
        public DbSet<CompanyAccountUser> companyAccountUsers { get; set; }
+        public DbSet<Offer> Offers { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public DbSet<JobApplication> JobApplications { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public DbSet<Tag> Tags { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public DbSet<Category> Categories { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public DbSet<OfferTag> OfferTags { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public DbSet<FormFilling> FormFillings { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public DbSet<FieldFilling> FieldFillings { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
         protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
         {
             configurationBuilder.Properties<decimal>().HavePrecision(18, 4);

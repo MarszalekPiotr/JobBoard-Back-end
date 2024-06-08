@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace JobBoard.Domain.Entities
 {
-    internal class Tag : DomainEntity
+    public class Tag : DomainEntity
     {
         public required string Name { get; set; }
         public ICollection<OfferTag> OfferTags { get; set; } = new List<OfferTag>();
