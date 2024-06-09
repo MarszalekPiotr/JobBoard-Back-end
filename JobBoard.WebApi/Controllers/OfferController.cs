@@ -1,4 +1,8 @@
-﻿using JobBoard.Domain.FormDefinitionSchema;
+﻿using JobBoard.Application.DTO;
+using JobBoard.Application.Interfaces.Helpers;
+using JobBoard.Application.Logic.Offers;
+using JobBoard.Domain.FormDefinitionSchema;
+using JobBoard.Infrastructure.Helpers;
 using JobBoard.Infrastructure.Persistance;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -13,35 +17,28 @@ namespace JobBoard.WebApi.Controllers
     public class OfferController : BaseController
     {
         private JsonSerializerOptions _serializerOptions;
-        public OfferController(ILogger<OfferController> logger, IMediator mediator) : base(logger, mediator)
+        private IJsonOfferHelper _jsonOfferHelper;
+        public OfferController(ILogger<OfferController> logger, IMediator mediator, IJsonOfferHelper jsonOfferHelper) : base(logger, mediator)
         {
             _serializerOptions = new JsonSerializerOptions();
             _serializerOptions.Converters.Add(new BaseFieldDefinitionConverter());
+            _serializerOptions.Converters.Add(new FormDefinitionConverter());
             _serializerOptions.Converters.Add(new JsonStringEnumConverter());
+            _jsonOfferHelper = jsonOfferHelper;
         }
 
         [HttpPost]
-        public async  Task<ActionResult> AddOffer( JsonDocument jsondoc)
-        {  
-            // i jais helper zeby wyciagnac poszczegolne pola i poszczegolne pola deserializowac odpowiendim parserem? jsonOfferHekper ktory nam sparsuje do jakiegos dto
-            // i w nim mozna obsluge zrobic parsera zeby juz tam miec gotowy form def
+        public async  Task<ActionResult> CreateOrUpdate( JsonDocument jsondoc)
+        {    
 
-            // do serializatora tylko trzeba go zmienic na caly form...
-            var formDefinitionJson = jsondoc.RootElement.GetProperty("FormDefinitionJSON");
-            List<BaseFieldDefinition> fields = new List<BaseFieldDefinition>();
-
-            foreach( var element in formDefinitionJson.EnumerateArray())
-            {
-                var fieldDefinition = JsonSerializer.Deserialize<BaseFieldDefinition>(element.GetRawText(),_serializerOptions);
-                fields.Add(fieldDefinition);
-            }
-
-            //var formDefinition = JsonSerializer.Deserialize<BaseFieldDefinition>(formDefinitionJson.GetRawText(),_serializerOptions);
+            OfferDTO offerDto = _jsonOfferHelper.ParseJsonToOfferDTO(jsondoc);
 
 
-            Console.WriteLine(fields.ToString());
-            Console.WriteLine();
+            // send to mediatr --- 
+            var model = _mediator.Send(new CreateOrUpdateOfferCommand.Request(offerDto));
             return Ok();
+
+
         }
 
     }

@@ -44,6 +44,7 @@ namespace JobBoard.WebApi
             .Enrich.FromLogContext()
             );
 
+            builder.Services.AddServicesInfrastructure();
 
             builder.Services.AddHttpContextAccessor();
             // Add services to the container.
@@ -61,9 +62,13 @@ namespace JobBoard.WebApi
             });
 
             builder.Services.AddControllers()
-            .AddJsonOptions(options =>
-            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
-         
+            .AddJsonOptions(options => {
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;   }          
+             );
+            
+            
+            
 
             builder.Services.AddMediatR(c =>
             {

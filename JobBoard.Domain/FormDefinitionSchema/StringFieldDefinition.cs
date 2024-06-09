@@ -12,6 +12,6 @@ namespace JobBoard.Domain.FormDefinitionSchema
         {
             this.EnumFieldType = Enums.EnumFieldType.String;
         }
-        public int MaxLengthValue = 1000;
+        public int MaxLengthValue { get; set; } = 1000;
     }
 }

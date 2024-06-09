@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace JobBoard.Infrastructure.Persistance.Configurations
@@ -28,8 +29,9 @@ namespace JobBoard.Infrastructure.Persistance.Configurations
                 .WithOne(ot => ot.Offer)
                 .HasForeignKey(ot => ot.OfferId);
 
-            var serializerOptions = new JsonSerializerOptions();
-            serializerOptions.Converters.Add(new BaseFieldDefinitionConverter());
+            var serializerOptions = new JsonSerializerOptions() { ReferenceHandler = ReferenceHandler.Preserve};
+            serializerOptions.Converters.Add(new FormDefinitionConverter());
+            serializerOptions.Converters.Add(new JsonStringEnumConverter());
 
             builder.Property(o => o.FormDefinitionJSON)
                 .HasColumnName("FormDefinitionJSON")

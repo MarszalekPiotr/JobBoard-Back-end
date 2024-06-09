@@ -19,13 +19,13 @@ namespace JobBoard.Infrastructure.Persistance
        public  DbSet<CandidateAcccount> CandidateAccounts { get; set; }
        public DbSet<CompanyAccount> companyAccounts { get; set; }
        public DbSet<CompanyAccountUser> companyAccountUsers { get; set; }
-        public DbSet<Offer> Offers { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public DbSet<JobApplication> JobApplications { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public DbSet<Tag> Tags { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public DbSet<Category> Categories { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public DbSet<OfferTag> OfferTags { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public DbSet<FormFilling> FormFillings { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public DbSet<FieldFilling> FieldFillings { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public DbSet<Offer> Offers { get ; set; }
+        public DbSet<JobApplication> JobApplications { get ; set ; }
+        public DbSet<Tag> Tags { get; set ; }
+        public DbSet<Category> Categories { get ; set; }
+        public DbSet<OfferTag> OfferTags { get; set; }
+        public DbSet<FormFilling> FormFillings { get; set; }
+        public DbSet<FieldFilling> FieldFillings { get ;set; }
 
         protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
         {
