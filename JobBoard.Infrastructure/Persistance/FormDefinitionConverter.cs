@@ -24,6 +24,8 @@ namespace JobBoard.Infrastructure.Persistance
 
                 var fields = new List<BaseFieldDefinition>();
 
+                
+
                 foreach (var element in doc.RootElement.GetProperty("FieldDefinitions").EnumerateArray())
                 {
 
@@ -66,10 +68,11 @@ namespace JobBoard.Infrastructure.Persistance
         }
 
         public override void Write(Utf8JsonWriter writer, FormDefinition value, JsonSerializerOptions options)
-        {   
+        {
 
-            writer.WriteStartObject();
-            writer.WritePropertyName("FormDefinition");
+
+            //writer.WriteStartObject();
+            //writer.WritePropertyName("FormDefinition");
             writer.WriteStartObject(); // Start writing the outer JSON object
 
             if (value.FieldDefinitions != null)
@@ -83,7 +86,7 @@ namespace JobBoard.Infrastructure.Persistance
 
                     var properties = fieldDefinition.GetType().GetProperties();
                     foreach (var property in properties)
-                    {   
+                    {
                         var propertyName = property.Name;
                         var propertyValue = property.GetValue(fieldDefinition);
 
@@ -103,7 +106,7 @@ namespace JobBoard.Infrastructure.Persistance
             }
 
             writer.WriteEndObject(); // End writing the outer JSON object
-            writer.WriteEndObject();
+            //writer.WriteEndObject();
         }
 
 

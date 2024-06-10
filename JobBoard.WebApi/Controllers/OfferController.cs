@@ -35,8 +35,8 @@ namespace JobBoard.WebApi.Controllers
 
 
             // send to mediatr --- 
-            var model = _mediator.Send(new CreateOrUpdateOfferCommand.Request(offerDto));
-            return Ok();
+            var model = await _mediator.Send(new CreateOrUpdateOfferCommand.Request(offerDto));
+            return Ok(model.OfferId);
 
 
         }

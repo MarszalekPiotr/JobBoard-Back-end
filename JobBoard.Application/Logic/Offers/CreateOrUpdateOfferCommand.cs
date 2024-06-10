@@ -38,8 +38,9 @@ namespace JobBoard.Application.Logic.Offers
 
             public List<int> TagIds { get; set; } = new List<int>() { };
             public Request(OfferDTO offerDTO)
-            {    
+            {
                 // mapper?
+                this.Id = offerDTO.Id;
                 this.Name = offerDTO.Name;
                 this.Description = offerDTO.Description;
                 this.City = offerDTO.City;
@@ -71,66 +72,85 @@ namespace JobBoard.Application.Logic.Offers
 
             public async Task<Result> Handle(Request request, CancellationToken cancellationToken)
             {
-                /// add or update offer logic.....
-                /// check if exists alredy in db if yes then update if not then create 
-                /// if exists check if accountId is matching
-                /// if not exist then add current account id to the db of this offer.
-                /// 
-                var companyAccount = await _currentAccountProvider.GetCurrentCompanyAccount();
-                if (companyAccount == null) throw new UnauthorizedException();
-                Offer  offer = null;
-                if(request.Id.HasValue)
-                {
-                     offer = _applicationDbContext.Offers.FirstOrDefault(o => o.Id == request.Id && o.CompanyAccountId == companyAccount.Id);
-                    if (offer == null)
+                
+                
+
+
+                    /// add or update offer logic.....
+                    /// check if exists alredy in db if yes then update if not then create 
+                    /// if exists check if accountId is matching
+                    /// if not exist then add current account id to the db of this offer.
+                    /// 
+                    var companyAccount = await _currentAccountProvider.GetCurrentCompanyAccount();
+                    if (companyAccount == null) throw new UnauthorizedException();
+                    Offer offer = null;
+                    if (request.Id.HasValue)
                     {
-                        throw new UnauthorizedException();
+                        offer = _applicationDbContext.Offers.FirstOrDefault(o => o.Id == (int)request.Id && o.CompanyAccountId == companyAccount.Id);
+                        if (offer == null)
+                        {
+                            throw new UnauthorizedException();
+                        }
+                        else
+                        {
+                            offer.Name = request.Name;
+                            offer.Description = request.Description;
+                            offer.City = request.City;
+                            offer.Location = request.Location;
+                            offer.CategoryId = request.CategoryId;
+                            offer.MinSalary = request.MinSalary;
+                            offer.MaxSalary = request.MaxSalary;
+                            offer.WorkingMode = request.WorkingMode;
+                            offer.ContractType = request.ContractType;
+                            offer.FormDefinitionJSON = request.FormDefinitionJSON;
+                            await UpdateOfferTags(request, offer.Id); 
+                           
+                            
+                        }
                     }
                     else
                     {
-                        offer.Name = request.Name;
-                        offer.Description = request.Description;
-                        offer.City = request.City;
-                        offer.Location = request.Location;
-                        offer.CategoryId = request.CategoryId;
-                        offer.MinSalary = request.MinSalary;
-                        offer.MaxSalary = request.MaxSalary;
-                        offer.WorkingMode = request.WorkingMode;
-                        offer.ContractType = request.ContractType;
-                        offer.FormDefinitionJSON = request.FormDefinitionJSON;
-                        offer.OfferTags.Clear();
-                        request.TagIds.ForEach(ti => _applicationDbContext.OfferTags.Add(new OfferTag() { OfferId = (int)request.Id, TagId = ti }));
-
-                    }
-                }
-                else
-                {
-                     offer = new Offer()
-                    {
-                        Name = request.Name,
-                        Description = request.Description,
-                        City = request.City,
-                        Location = request.Location,
-                        CategoryId = request.CategoryId,
-                        MinSalary = request.MinSalary,
-                        MaxSalary = request.MaxSalary,
-                        WorkingMode = request.WorkingMode,
-                        ContractType = request.ContractType,
-                        FormDefinitionJSON = request.FormDefinitionJSON,
-                        CompanyAccountId = companyAccount.Id,
-                    };
-
-                    var offerEntity =  await _applicationDbContext.Offers.AddAsync(offer, cancellationToken);
+                        offer = new Offer()
+                        {
+                            Name = request.Name,
+                            Description = request.Description,
+                            City = request.City,
+                            Location = request.Location,
+                            CategoryId = request.CategoryId,
+                            MinSalary = request.MinSalary,
+                            MaxSalary = request.MaxSalary,
+                            WorkingMode = request.WorkingMode,
+                            ContractType = request.ContractType,
+                            FormDefinitionJSON = request.FormDefinitionJSON,
+                            CompanyAccountId = companyAccount.Id,
+                        };
+                        
                    
-                   // request.TagIds.ForEach(ti => _applicationDbContext.OfferTags.Add(new OfferTag() { OfferId = offerEntity.Entity.Id, TagId = ti }));
+                        var offerEntity = await _applicationDbContext.Offers.AddAsync(offer, cancellationToken);
+                       await _applicationDbContext.SaveChangesAsync(cancellationToken);
 
-
+                     //request.TagIds.ForEach(ti =>  _applicationDbContext.OfferTags.Add(new OfferTag() { OfferId = offerEntity.Entity.Id, TagId = ti }));
+                     await UpdateOfferTags(request, offerEntity.Entity.Id);
+ 
                 }
-                  await _applicationDbContext.SaveChangesAsync(cancellationToken);
-              
-                return new Result() { OfferId = offer.Id};
-              
+                    
+
+                    return new Result() { OfferId = offer.Id };
+
             }
+
+            private async Task UpdateOfferTags(Request request,int offerId)
+            {
+                if (request.Id.HasValue)
+                {
+                    //var offerTags = _applicationDbContext.Offers.FirstOrDefault(o => o.Id == offerId)?.OfferTags;
+                    var offerTags = _applicationDbContext.OfferTags.Where(ot => ot.OfferId == offerId);
+                    _applicationDbContext.OfferTags.RemoveRange(offerTags);
+                      
+                }
+                request.TagIds.ForEach(ti => _applicationDbContext.OfferTags.Add(new OfferTag() { OfferId = offerId, TagId = ti }));
+                await _applicationDbContext.SaveChangesAsync();
+            } 
         }
 
         public class Validator : AbstractValidator<Request>

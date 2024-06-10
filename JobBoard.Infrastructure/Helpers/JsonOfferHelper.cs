@@ -31,7 +31,7 @@ namespace JobBoard.Infrastructure.Helpers
             public OfferDTO ParseJsonToOfferDTO(JsonDocument jsonDocument)
             {
 
-               var formDefinitionJson = jsonDocument.RootElement.GetProperty("FormDefinitionJSON");
+               var formDefinitionJson = jsonDocument.RootElement.GetProperty("FormDefinition");
 
                var formDefinition = JsonSerializer.Deserialize<FormDefinition>(formDefinitionJson.GetRawText(), _serializerOptions);
              var offerDTO = new OfferDTO()
