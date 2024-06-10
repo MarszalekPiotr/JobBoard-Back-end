@@ -33,26 +33,26 @@ namespace JobBoard.Application.Logic.Offers
             public  EnumWorkMode WorkingMode { get; set; }
             public  EnumContractType ContractType { get; set; }
 
-            public FormDefinition FormDefinitionJSON { get; set; } = new FormDefinition();
+            public FormDefinition? FormDefinitionJSON { get; set; } 
             public int CategoryId { get; set; }
 
             public List<int> TagIds { get; set; } = new List<int>() { };
-            public Request(OfferDTO offerDTO)
-            {
-                // mapper?
-                this.Id = offerDTO.Id;
-                this.Name = offerDTO.Name;
-                this.Description = offerDTO.Description;
-                this.City = offerDTO.City;
-                this.Location = offerDTO.Location;
-                this.CategoryId = offerDTO.CategoryId;
-                this.MinSalary = offerDTO.MinSalary;
-                this.MaxSalary = offerDTO.MaxSalary;
-                this.WorkingMode = offerDTO.WorkingMode;
-                this.ContractType = offerDTO.ContractType;
-                this.TagIds = offerDTO.TagIds;
-                this.FormDefinitionJSON = offerDTO.FormDefinition;
-            }
+            //public Request(OfferDTO offerDTO)
+            //{
+            //    // mapper?
+            //    this.Id = offerDTO.Id;
+            //    this.Name = offerDTO.Name;
+            //    this.Description = offerDTO.Description;
+            //    this.City = offerDTO.City;
+            //    this.Location = offerDTO.Location;
+            //    this.CategoryId = offerDTO.CategoryId;
+            //    this.MinSalary = offerDTO.MinSalary;
+            //    this.MaxSalary = offerDTO.MaxSalary;
+            //    this.WorkingMode = offerDTO.WorkingMode;
+            //    this.ContractType = offerDTO.ContractType;
+            //    this.TagIds = offerDTO.TagIds;
+            //    this.FormDefinitionJSON = offerDTO.FormDefinition;
+            //}
             
         }
 
@@ -72,15 +72,6 @@ namespace JobBoard.Application.Logic.Offers
 
             public async Task<Result> Handle(Request request, CancellationToken cancellationToken)
             {
-                
-                
-
-
-                    /// add or update offer logic.....
-                    /// check if exists alredy in db if yes then update if not then create 
-                    /// if exists check if accountId is matching
-                    /// if not exist then add current account id to the db of this offer.
-                    /// 
                     var companyAccount = await _currentAccountProvider.GetCurrentCompanyAccount();
                     if (companyAccount == null) throw new UnauthorizedException();
                     Offer offer = null;
@@ -104,8 +95,7 @@ namespace JobBoard.Application.Logic.Offers
                             offer.ContractType = request.ContractType;
                             offer.FormDefinitionJSON = request.FormDefinitionJSON;
                             await UpdateOfferTags(request, offer.Id); 
-                           
-                            
+                          
                         }
                     }
                     else
@@ -124,17 +114,11 @@ namespace JobBoard.Application.Logic.Offers
                             FormDefinitionJSON = request.FormDefinitionJSON,
                             CompanyAccountId = companyAccount.Id,
                         };
-                        
-                   
-                        var offerEntity = await _applicationDbContext.Offers.AddAsync(offer, cancellationToken);
-                       await _applicationDbContext.SaveChangesAsync(cancellationToken);
-
-                     //request.TagIds.ForEach(ti =>  _applicationDbContext.OfferTags.Add(new OfferTag() { OfferId = offerEntity.Entity.Id, TagId = ti }));
+                     var offerEntity = await _applicationDbContext.Offers.AddAsync(offer, cancellationToken);
+                     await _applicationDbContext.SaveChangesAsync(cancellationToken);
                      await UpdateOfferTags(request, offerEntity.Entity.Id);
  
                 }
-                    
-
                     return new Result() { OfferId = offer.Id };
 
             }
@@ -143,7 +127,7 @@ namespace JobBoard.Application.Logic.Offers
             {
                 if (request.Id.HasValue)
                 {
-                    //var offerTags = _applicationDbContext.Offers.FirstOrDefault(o => o.Id == offerId)?.OfferTags;
+                 
                     var offerTags = _applicationDbContext.OfferTags.Where(ot => ot.OfferId == offerId);
                     _applicationDbContext.OfferTags.RemoveRange(offerTags);
                       
@@ -157,12 +141,9 @@ namespace JobBoard.Application.Logic.Offers
         {
             public Validator()
             {
-               // validations for all the fields
-               // validation foreach fields... so propbably some kind of validator. each must have name and type.. so not null 
-               // and max min etc. are optional. because tere are some default values.
-
-              
-
+               /// tags only int collection
+               /// form Definition if it is serializable -- simple try catch? how may i validate it?
+               ///
             }
         }
 

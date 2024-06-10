@@ -28,17 +28,33 @@ namespace JobBoard.WebApi.Controllers
         }
 
         [HttpPost]
-        public async  Task<ActionResult> CreateOrUpdate( JsonDocument jsondoc)
-        {    
+        //public async  Task<ActionResult> CreateOrUpdate( JsonDocument jsondoc)
+        //{    
 
-            OfferDTO offerDto = _jsonOfferHelper.ParseJsonToOfferDTO(jsondoc);
+        //    OfferDTO offerDto = _jsonOfferHelper.ParseJsonToOfferDTO(jsondoc);
 
 
+        //    // send to mediatr --- 
+        //    var model = await _mediator.Send(new CreateOrUpdateOfferCommand.Request(offerDto));
+        //    return Ok(model.OfferId);
+
+        //}
+
+        [HttpPost]
+        public async Task<ActionResult> CreateOrUpdateNEW(CreateOrUpdateOfferCommand.Request request)
+        {
             // send to mediatr --- 
-            var model = await _mediator.Send(new CreateOrUpdateOfferCommand.Request(offerDto));
+            var model = await _mediator.Send(request);
             return Ok(model.OfferId);
 
+        }
 
+        [HttpGet]
+        public async  Task<ActionResult> GetDetails([FromQuery] GetDetailsQuery.Request model)
+        {
+            var result = await _mediator.Send(model);
+            
+            return Ok(result);
         }
 
     }

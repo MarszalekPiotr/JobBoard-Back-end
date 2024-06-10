@@ -1,5 +1,6 @@
 ﻿using JobBoard.Application.DTO;
 using JobBoard.Application.Interfaces.Helpers;
+using JobBoard.Application.Logic.Offers;
 using JobBoard.Domain.Enums;
 using JobBoard.Domain.FormDefinitionSchema;
 using JobBoard.Infrastructure.Persistance;
@@ -74,5 +75,14 @@ namespace JobBoard.Infrastructure.Helpers
         
             return offerDTO;
     }
+
+        //public JsonDocument ParseOfferDetailsToJSON(GetDetailsQuery.Result result)
+        //{
+        //    var formJSON = JsonSerializer.Serialize(result.FormDefinitionJSON, _serializerOptions);
+
+             
+
+
+        //}
     }
 }
