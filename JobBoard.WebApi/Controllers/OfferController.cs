@@ -56,6 +56,12 @@ namespace JobBoard.WebApi.Controllers
             
             return Ok(result);
         }
+        [HttpGet]
+        public async Task<ActionResult> GetList([FromQuery] GetListQuery.Request request)
+        {
+            var result = await _mediator.Send(request);
+            return Ok(result);
+        }
 
     }
 }
