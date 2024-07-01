@@ -5,6 +5,7 @@ using JobBoard.Application.DTO;
 using JobBoard.Application.Exceptions;
 using JobBoard.Application.Interfaces;
 using JobBoard.Application.Logic.Abstractions;
+using JobBoard.Application.Validators;
 using JobBoard.Domain.Entities;
 using JobBoard.Domain.Enums;
 using JobBoard.Domain.FormDefinitionSchema;
@@ -139,8 +140,36 @@ namespace JobBoard.Application.Logic.Offers
 
         public class Validator : AbstractValidator<Request>
         {
+
+            //public int? Id { get; set; }
+            //public string Name { get; set; } = string.Empty;
+            //public string Description { get; set; } = string.Empty;
+            //public string City { get; set; } = string.Empty;
+            //public string Location { get; set; } = string.Empty;
+            //public int MinSalary { get; set; }
+            //public int MaxSalary { get; set; }
+            //public EnumWorkMode WorkingMode { get; set; }
+            //public EnumContractType ContractType { get; set; }
+
+            //public FormDefinition? FormDefinitionJSON { get; set; }
+            //public int CategoryId { get; set; }
+
+            //public List<int> TagIds { get; set; } = new List<int>() { };
+
             public Validator()
-            {
+            {  
+                RuleFor(x => x.Name).NotEmpty().MinimumLength(5).MaximumLength(30);
+                RuleFor(x => x.Description).NotEmpty().MinimumLength(30).MaximumLength(2500);
+                RuleFor(x => x.City).NotEmpty().MaximumLength(30);
+                RuleFor(x => x.Location).NotEmpty().MaximumLength(50);
+                RuleFor(x => x.MinSalary).NotEmpty();
+                RuleFor(x => x.MaxSalary).NotEmpty();
+                RuleFor(x => x.WorkingMode).NotEmpty();
+                RuleFor(x => x.ContractType).NotEmpty();
+                RuleFor(x => x.CategoryId).NotEmpty();
+                RuleFor(x => x.FormDefinitionJSON).FormDefinitionCorrect<CreateOrUpdateOfferCommand.Request>();
+
+
                /// tags only int collection
                /// form Definition if it is serializable -- simple try catch? how may i validate it?
                ///

@@ -7,6 +7,7 @@ using System.Text.Json.Serialization;
 using System.Text.Json;
 using System.Threading.Tasks;
 using JobBoard.Domain.Enums;
+using JobBoard.Application.Exceptions;
 
 namespace JobBoard.Infrastructure.Persistance
 {  /// <summary>
@@ -36,25 +37,33 @@ namespace JobBoard.Infrastructure.Persistance
                     switch (fieldType)
                     {
                         case EnumFieldType.List:
-                            result = JsonSerializer.Deserialize<ListFieldDefinition>(element.GetRawText(), options) ?? throw new Exception("deserialize exception");
+                            try
+                            {
+                                result = JsonSerializer.Deserialize<ListFieldDefinition>(element.GetRawText(), options);
+                            }
+                            catch
+                            {
+                                throw new ErrorException("deserialization not possible");
+                            }
+                            
                             break;
                         case EnumFieldType.Int:
-                            result = JsonSerializer.Deserialize<IntFieldDefinition>(element.GetRawText(), options) ?? throw new Exception("deserialize exception");
+                            result = JsonSerializer.Deserialize<IntFieldDefinition>(element.GetRawText(), options) ?? throw new ErrorException("deserialize exception");
                             break;
                         case EnumFieldType.Date:
-                            result = JsonSerializer.Deserialize<DateFieldDefinition>(element.GetRawText(), options) ?? throw new Exception("deserialize exception");
+                            result = JsonSerializer.Deserialize<DateFieldDefinition>(element.GetRawText(), options) ?? throw new ErrorException("deserialize exception");
                             break;
                         case EnumFieldType.Double:
-                            result = JsonSerializer.Deserialize<DoubleFieldDefnition>(element.GetRawText(), options) ?? throw new Exception("deserialize exception");
+                            result = JsonSerializer.Deserialize<DoubleFieldDefnition>(element.GetRawText(), options) ?? throw new ErrorException("deserialize exception");
                             break;
                         case EnumFieldType.Bool:
-                            result = JsonSerializer.Deserialize<BoolFieldDefinition>(element.GetRawText(), options) ?? throw new Exception("deserialize exception");
+                            result = JsonSerializer.Deserialize<BoolFieldDefinition>(element.GetRawText(), options) ?? throw new ErrorException("deserialize exception");
                             break;
                         case EnumFieldType.Percentage:
-                            result = JsonSerializer.Deserialize<PercentageFieldDefinition>(element.GetRawText(), options) ?? throw new Exception("deserialize exception");
+                            result = JsonSerializer.Deserialize<PercentageFieldDefinition>(element.GetRawText(), options) ?? throw new ErrorException("deserialize exception");
                             break;
                         case EnumFieldType.String:
-                            result = JsonSerializer.Deserialize<StringFieldDefinition>(element.GetRawText(), options) ?? throw new Exception("deserialize exception");
+                            result = JsonSerializer.Deserialize<StringFieldDefinition>(element.GetRawText(), options) ?? throw new ErrorException("deserialize exception");
                             break;
                         default:
                             throw new JsonException($"Unknown type: {fieldType}");

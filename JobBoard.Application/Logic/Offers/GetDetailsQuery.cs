@@ -82,8 +82,16 @@ namespace JobBoard.Application.Logic.Offers
                     FormDefinitionJSON = offer.FormDefinitionJSON,
                     CompanyName = _applicationDbContext.companyAccounts.FirstOrDefault(ca => ca.Id == offer.CompanyAccountId)?.Name ?? string.Empty,
                     CategoryName = _applicationDbContext.Categories.FirstOrDefault(c => c.Id == offer.CategoryId)?.Name ?? string.Empty,
-                    Tags = _applicationDbContext.Tags.Where(t => tagIds.Contains(t.Id)).Select(t => new TagDTO() {Name = t.Name, IconPath = "default"}).ToList()
+                    // Tags = _applicationDbContext.Tags.Where(t => tagIds.Contains(t.Id)).Select(t => new TagDTO() {Name = t.Name, IconPath = "default"}).ToList()
+                    Tags = _applicationDbContext.Tags.Join(_applicationDbContext.OfferTags
+                   , tag => tag.Id,
+                   offerTag => offerTag.TagId,
+                   (tag, offerTag) => new { tag, offerTag })
+                    .Where(joined => joined.offerTag.OfferId == offer.Id)
+                    .Select(joined => new TagDTO() { Name = joined.tag.Name, IconPath = "default" }).ToList()
+                 
                 };
+
 
 
             }

@@ -119,9 +119,9 @@ namespace JobBoard.WebApi
            .AllowCredentials()
            .AllowAnyMethod());
 
+
+
             app.UseExceptionResultMiddleware();
-
-
 
             app.UseAuthorization();
 
