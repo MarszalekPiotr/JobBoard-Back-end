@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JobBoard.Domain.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,9 @@ namespace JobBoard.Domain.FormDefinitionSchema
     {
         public BoolFieldDefinition() 
         {
-            this.EnumFieldType = Enums.EnumFieldType.Bool;
+            
         }
+
+        public override EnumFieldType EnumFieldType  => EnumFieldType.Bool;
     }
 }

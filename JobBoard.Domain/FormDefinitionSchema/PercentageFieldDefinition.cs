@@ -11,9 +11,11 @@ namespace JobBoard.Domain.FormDefinitionSchema
     {   
         public PercentageFieldDefinition()
         {
-            this.EnumFieldType = EnumFieldType.Percentage;
+           
         }
         public int MinValue { get; set; } = 0;
         public int MaxValue { get; set; } = 100;
+
+        public override EnumFieldType EnumFieldType => EnumFieldType.Percentage;
     }
 }

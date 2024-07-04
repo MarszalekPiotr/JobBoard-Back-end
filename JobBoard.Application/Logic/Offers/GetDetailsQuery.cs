@@ -23,11 +23,17 @@ namespace JobBoard.Application.Logic.Offers
         }
 
         public class Result
-        {
+        {   
+            public class CityDTO
+            {   
+                public int? Id { get; set; }
+                public string? Name { get; set; } = string.Empty;
+            }
+
             public required string Name { get; set; }
             public string Description { get; set; } = string.Empty;
-            public string City { get; set; } = string.Empty;
-            public string Location { get; set; } = string.Empty;
+            public CityDTO City { get; set; } = default!;
+            public string Address { get; set; } = string.Empty;
             public required int MinSalary { get; set; }
             public required int MaxSalary { get; set; }
             public required EnumWorkMode WorkingMode { get; set; }
@@ -56,25 +62,16 @@ namespace JobBoard.Application.Logic.Offers
                 var offer = _applicationDbContext.Offers.FirstOrDefault(o => o.Id == request.Id) ?? throw new ErrorException("Offer not found");
 
 
-                //      public required string Name { get; set; }
-                //public string Description { get; set; } = string.Empty;
-                //public string City { get; set; } = string.Empty;
-                //public string Location { get; set; } = string.Empty;
-                //public required int MinSalary { get; set; }
-                //public required int MaxSalary { get; set; }
-                //public required EnumWorkMode WorkingMode { get; set; }
-                //public required EnumContractType ContractType { get; set; }
-
-                //public FormDefinition? FormDefinitionJSON { get; set; }
+           
 
                 var tagIds = _applicationDbContext.OfferTags.Where(oft => oft.OfferId == offer.Id).Select(oft => oft.TagId);
-
+                var city = _applicationDbContext.Cities.FirstOrDefault(c => c.Id == offer.CityId);
                 return new Result()
                 {
                     Name = offer.Name,
                     Description = offer.Description,
-                    City = offer.City,
-                    Location = offer.Location,
+                    City =   new Result.CityDTO() { Id = city?.Id, Name = city?.Name },
+                    Address = offer.Address,
                     MinSalary = offer.MinSalary,
                     MaxSalary = offer.MaxSalary,
                     WorkingMode = offer.WorkingMode,

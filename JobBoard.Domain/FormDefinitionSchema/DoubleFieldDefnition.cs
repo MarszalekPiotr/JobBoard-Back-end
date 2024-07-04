@@ -11,9 +11,11 @@ namespace JobBoard.Domain.FormDefinitionSchema
     {   
         public DoubleFieldDefnition()
         {
-            this.EnumFieldType = EnumFieldType.Double;
+            
         }
         public double MinValue = 0;
         public double MaxValue = double.MaxValue;
+
+        public override EnumFieldType EnumFieldType => EnumFieldType.Double;
     }
 }

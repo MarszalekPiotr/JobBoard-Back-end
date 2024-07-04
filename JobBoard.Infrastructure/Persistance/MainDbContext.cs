@@ -19,13 +19,14 @@ namespace JobBoard.Infrastructure.Persistance
        public  DbSet<CandidateAcccount> CandidateAccounts { get; set; }
        public DbSet<CompanyAccount> companyAccounts { get; set; }
        public DbSet<CompanyAccountUser> companyAccountUsers { get; set; }
-        public DbSet<Offer> Offers { get ; set; }
-        public DbSet<JobApplication> JobApplications { get ; set ; }
-        public DbSet<Tag> Tags { get; set ; }
-        public DbSet<Category> Categories { get ; set; }
-        public DbSet<OfferTag> OfferTags { get; set; }
-        public DbSet<FormFilling> FormFillings { get; set; }
-        public DbSet<FieldFilling> FieldFillings { get ;set; }
+       public DbSet<Offer> Offers { get ; set; }
+       public DbSet<JobApplication> JobApplications { get ; set ; }
+       public DbSet<Tag> Tags { get; set ; }
+       public DbSet<Category> Categories { get ; set; }
+       public DbSet<OfferTag> OfferTags { get; set; }
+       public DbSet<FormFilling> FormFillings { get; set; }
+       public DbSet<FieldFilling> FieldFillings { get ;set; }
+       public DbSet<City> Cities { get ; set; }
 
         protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
         {

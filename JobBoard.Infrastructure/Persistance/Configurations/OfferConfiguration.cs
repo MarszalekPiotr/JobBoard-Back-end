@@ -17,11 +17,19 @@ namespace JobBoard.Infrastructure.Persistance.Configurations
     public class OfferConfiguration : IEntityTypeConfiguration<Offer>
     {
         public void Configure(EntityTypeBuilder<Offer> builder)
-        {
+        {   
+
+
+
             builder.HasKey(o => o.Id);
             builder.HasOne(o => o.Category)
                 .WithMany(c => c.Offers)
                 .HasForeignKey(o => o.CategoryId);
+
+            builder.HasOne(o => o.City)
+                .WithMany(c => c.Offers)
+                .HasForeignKey(o => o.CityId);
+
 
             builder.HasOne(o => o.CompanyAccount)
                 .WithMany(ca => ca.Offers)
@@ -33,7 +41,7 @@ namespace JobBoard.Infrastructure.Persistance.Configurations
 
             var serializerOptions = new JsonSerializerOptions() { ReferenceHandler = ReferenceHandler.Preserve};
             serializerOptions.Converters.Add(new FormDefinitionConverter());
-            serializerOptions.Converters.Add(new JsonStringEnumConverter());
+            //serializerOptions.Converters.Add(new JsonStringEnumConverter());
 
            
 
@@ -45,17 +53,19 @@ namespace JobBoard.Infrastructure.Persistance.Configurations
             );
 
 
-            builder
-       .Property(o => o.WorkingMode)
-       .HasConversion(
-           v => v.ToString(),
-           v => (EnumWorkMode)Enum.Parse(typeof(EnumWorkMode), v));
 
-            builder
-                .Property(o => o.ContractType)
-                .HasConversion(
-                    v => v.ToString(),
-                    v => (EnumContractType)Enum.Parse(typeof(EnumContractType), v));
+
+       //     builder
+       //.Property(o => o.WorkingMode)
+       //.HasConversion(
+       //    v => v,
+       //    v => (EnumWorkMode)Enum.Parse(typeof(EnumWorkMode), v));
+
+       //     builder
+       //         .Property(o => o.ContractType)
+       //         .HasConversion(
+       //             v => v,
+       //             v => (EnumContractType)Enum.Parse(typeof(EnumContractType), v));
         }
     }
 }

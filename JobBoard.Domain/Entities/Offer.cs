@@ -14,8 +14,8 @@ namespace JobBoard.Domain.Entities
     {
         public required string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
-        public  string City { get; set; } = string.Empty; 
-        public  string Location { get; set; } = string.Empty;
+        
+        public  string Address { get; set; } = string.Empty;
         public required int MinSalary { get; set; } 
         public required  int MaxSalary { get; set;}
         public required EnumWorkMode WorkingMode { get; set; }
@@ -25,6 +25,8 @@ namespace JobBoard.Domain.Entities
         public required Guid CompanyAccountId { get; set; }
         public CompanyAccount CompanyAccount { get; set; } = default!;
 
+        public int? CityId { get; set; }
+        public City City { get; set; } = default!;
         public int CategoryId { get; set; }
         public Category Category { get; set; } = default!;
         public ICollection<JobApplication> JobApplications { get; set; } = new List<JobApplication>();

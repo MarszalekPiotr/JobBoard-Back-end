@@ -27,7 +27,7 @@ namespace JobBoard.Application.Logic.Offers
             public  int? Id { get; set; } 
             public  string Name { get; set; } = string.Empty;
             public string Description { get; set; } = string.Empty;
-            public string City { get; set; } = string.Empty;
+            public int? CityId { get; set; }
             public string Location { get; set; } = string.Empty;
             public  int MinSalary { get; set; }
             public  int MaxSalary { get; set; }
@@ -38,23 +38,7 @@ namespace JobBoard.Application.Logic.Offers
             public int CategoryId { get; set; }
 
             public List<int> TagIds { get; set; } = new List<int>() { };
-            //public Request(OfferDTO offerDTO)
-            //{
-            //    // mapper?
-            //    this.Id = offerDTO.Id;
-            //    this.Name = offerDTO.Name;
-            //    this.Description = offerDTO.Description;
-            //    this.City = offerDTO.City;
-            //    this.Location = offerDTO.Location;
-            //    this.CategoryId = offerDTO.CategoryId;
-            //    this.MinSalary = offerDTO.MinSalary;
-            //    this.MaxSalary = offerDTO.MaxSalary;
-            //    this.WorkingMode = offerDTO.WorkingMode;
-            //    this.ContractType = offerDTO.ContractType;
-            //    this.TagIds = offerDTO.TagIds;
-            //    this.FormDefinitionJSON = offerDTO.FormDefinition;
-            //}
-            
+     
         }
 
         public class Result
@@ -87,8 +71,8 @@ namespace JobBoard.Application.Logic.Offers
                         {
                             offer.Name = request.Name;
                             offer.Description = request.Description;
-                            offer.City = request.City;
-                            offer.Location = request.Location;
+                            offer.CityId = request.CityId;
+                            offer.Address = request.Location;
                             offer.CategoryId = request.CategoryId;
                             offer.MinSalary = request.MinSalary;
                             offer.MaxSalary = request.MaxSalary;
@@ -105,8 +89,8 @@ namespace JobBoard.Application.Logic.Offers
                         {
                             Name = request.Name,
                             Description = request.Description,
-                            City = request.City,
-                            Location = request.Location,
+                            CityId = request.CityId,
+                            Address = request.Location,
                             CategoryId = request.CategoryId,
                             MinSalary = request.MinSalary,
                             MaxSalary = request.MaxSalary,
@@ -160,7 +144,7 @@ namespace JobBoard.Application.Logic.Offers
             {  
                 RuleFor(x => x.Name).NotEmpty().MinimumLength(5).MaximumLength(30);
                 RuleFor(x => x.Description).NotEmpty().MinimumLength(30).MaximumLength(2500);
-                RuleFor(x => x.City).NotEmpty().MaximumLength(30);
+               
                 RuleFor(x => x.Location).NotEmpty().MaximumLength(50);
                 RuleFor(x => x.MinSalary).NotEmpty();
                 RuleFor(x => x.MaxSalary).NotEmpty();

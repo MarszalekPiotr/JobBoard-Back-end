@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JobBoard.Domain.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,8 +11,10 @@ namespace JobBoard.Domain.FormDefinitionSchema
     {   
         public StringFieldDefinition()
         {
-            this.EnumFieldType = Enums.EnumFieldType.String;
+            
         }
         public int MaxLengthValue { get; set; } = 1000;
+
+        public override EnumFieldType EnumFieldType => EnumFieldType.String;
     }
 }

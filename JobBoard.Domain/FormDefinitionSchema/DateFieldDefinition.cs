@@ -1,4 +1,5 @@
-﻿using JobBoard.Domain.FormDefinitionSchema;
+﻿using JobBoard.Domain.Enums;
+using JobBoard.Domain.FormDefinitionSchema;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,9 +12,11 @@ namespace JobBoard.Domain.FormDefinitionSchema
     {  
         public DateFieldDefinition() 
         {
-            this.EnumFieldType = Enums.EnumFieldType.Date;
+            
         }
         public DateTimeOffset MinDateValue { get; set; } 
         public DateTimeOffset MaxDateValue { get; set; }
+
+        public override EnumFieldType EnumFieldType => EnumFieldType.Date;
     }
 }

@@ -25,13 +25,13 @@ namespace JobBoard.Infrastructure.Persistance
 
                 var fields = new List<BaseFieldDefinition>();
 
-                
+
 
                 foreach (var element in doc.RootElement.GetProperty("FieldDefinitions").EnumerateArray())
-                {
-
-                    var typeString = element.GetProperty("EnumFieldType").GetString();
-                    Enum.TryParse(typeString, out EnumFieldType fieldType);
+                {   // dziala tylko d bazy nie do controlera xd
+                   // var typeString = element.GetProperty("EnumFieldType").GetString();
+                    var typeString = (EnumFieldType)(element.GetProperty("EnumFieldType").GetInt64());
+                    Enum.TryParse(typeString.ToString(), out EnumFieldType fieldType);
                     BaseFieldDefinition result;
 
                     switch (fieldType)

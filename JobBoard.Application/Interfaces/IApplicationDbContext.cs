@@ -21,6 +21,7 @@ namespace JobBoard.Application.Interfaces
         DbSet<OfferTag> OfferTags { get; set; }
         DbSet<FormFilling> FormFillings { get; set; }
         DbSet<FieldFilling> FieldFillings { get; set; } 
+        DbSet<City> Cities { get; set; } 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 }

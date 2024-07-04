@@ -11,6 +11,6 @@ namespace JobBoard.Domain.FormDefinitionSchema
     {
         public string Name { get; set; } = string.Empty;
         public bool IsRequired { get; set; }
-        public  EnumFieldType EnumFieldType { get; set; }
+        public abstract  EnumFieldType EnumFieldType { get;  }
     }
 }
