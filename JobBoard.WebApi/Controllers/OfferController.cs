@@ -16,15 +16,10 @@ namespace JobBoard.WebApi.Controllers
     [ApiController]
     public class OfferController : BaseController
     {
-        private JsonSerializerOptions _serializerOptions;
-        private IJsonOfferHelper _jsonOfferHelper;
-        public OfferController(ILogger<OfferController> logger, IMediator mediator, IJsonOfferHelper jsonOfferHelper) : base(logger, mediator)
+      
+        public OfferController(ILogger<OfferController> logger, IMediator mediator) : base(logger, mediator)
         {
-            _serializerOptions = new JsonSerializerOptions();
-            _serializerOptions.Converters.Add(new BaseFieldDefinitionConverter());
-            _serializerOptions.Converters.Add(new FormDefinitionConverter());
-            _serializerOptions.Converters.Add(new JsonStringEnumConverter());
-            _jsonOfferHelper = jsonOfferHelper;
+           
         }
 
         [HttpPost]

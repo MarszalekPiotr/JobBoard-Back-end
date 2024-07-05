@@ -14,8 +14,9 @@ namespace JobBoard.Domain.FormDefinitionSchema
 
         }
         // validation
-        public int MinValue = 0;
-        public int MaxValue = int.MaxValue;
+        public int MinValue { get; set; } = 0;
+
+        public int MaxValue { get; set; } = int.MaxValue;
 
         public override EnumFieldType EnumFieldType => EnumFieldType.Int;
     }

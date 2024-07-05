@@ -142,7 +142,7 @@ namespace JobBoard.Application.Logic.Offers
 
             private static List<TagDTO> GetTagsForOffer(int offerId, IApplicationDbContext applicationDbContext)
             
-            {
+              {   // to delete 
                 var category = applicationDbContext.Categories.ToList();
                 var category2 = applicationDbContext.Categories.FirstOrDefault(c => c.Id == applicationDbContext.Offers.FirstOrDefault(o => o.Id == offerId).CategoryId);
 

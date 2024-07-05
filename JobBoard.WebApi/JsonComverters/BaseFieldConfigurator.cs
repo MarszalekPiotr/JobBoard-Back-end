@@ -13,7 +13,7 @@ namespace JobBoard.Infrastructure.Persistance
 {  /// <summary>
 ///  zmienic base fild na form definition
 /// </summary>
-    public class BaseFieldDefinitionDatabaseConverter : JsonConverter<BaseFieldDefinition>
+    public class BaseFieldDefinitionJsonConverter : JsonConverter<BaseFieldDefinition>
     {
         public override BaseFieldDefinition Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
@@ -23,7 +23,7 @@ namespace JobBoard.Infrastructure.Persistance
                 /// foreach i lista ktora zwracamy na koncu ?
                 
 
-                var typeString = doc.RootElement.GetProperty("EnumFieldType").GetString();
+                var typeString = doc.RootElement.GetProperty("enumFieldType").GetString();
                 Enum.TryParse(typeString, out EnumFieldType fieldType);
 
 

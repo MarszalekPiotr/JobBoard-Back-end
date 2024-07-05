@@ -40,10 +40,10 @@ namespace JobBoard.Infrastructure.Persistance.Configurations
                 .HasForeignKey(ot => ot.OfferId);
 
             var serializerOptions = new JsonSerializerOptions() { ReferenceHandler = ReferenceHandler.Preserve};
-            serializerOptions.Converters.Add(new FormDefinitionConverter());
-            //serializerOptions.Converters.Add(new JsonStringEnumConverter());
+            serializerOptions.Converters.Add(new BaseFieldDefinitionDatabaseConverter());
+            serializerOptions.Converters.Add(new JsonStringEnumConverter());
 
-           
+
 
             builder.Property(o => o.FormDefinitionJSON)
                 .HasColumnName("FormDefinitionJSON")

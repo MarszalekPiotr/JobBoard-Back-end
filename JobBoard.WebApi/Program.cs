@@ -65,7 +65,7 @@ namespace JobBoard.WebApi
             .AddJsonOptions(options => {
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
-                options.JsonSerializerOptions.Converters.Add(new FormDefinitionConverter());
+                options.JsonSerializerOptions.Converters.Add(new BaseFieldDefinitionJsonConverter());
             }          
              );
             
