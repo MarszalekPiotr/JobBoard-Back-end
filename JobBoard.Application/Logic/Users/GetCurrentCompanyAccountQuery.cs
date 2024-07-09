@@ -2,6 +2,7 @@
 using JobBoard.Application.Exceptions;
 using JobBoard.Application.Interfaces;
 using JobBoard.Application.Logic.Abstractions;
+using JobBoard.Domain.Enums;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,8 @@ namespace JobBoard.Application.Logic.Users
 
         public class Result
         {
-            public Guid AccountId { get; set; }
+            public int AccountId { get; set; }
+            public EnumAccountType AccountType { get => EnumAccountType.CompanyAccount; }
             public string Name { get; set; }
             public string Description { get; set; } = string.Empty;
             public string ContactEmail { get; set; } = string.Empty;
@@ -39,8 +41,8 @@ namespace JobBoard.Application.Logic.Users
             public async Task<Result> Handle(Request request, CancellationToken cancellationToken)
             {
                 var account = await _currentAccountProvider.GetCurrentCompanyAccount();
-                if (account != null)
-                {
+                
+               
                     return new Result()
                     {
                         AccountId = account.Id,
@@ -50,8 +52,7 @@ namespace JobBoard.Application.Logic.Users
                         ContactEmail = account.ContactEmail
                        
                     };
-                }
-                throw new UnauthorizedException();
+     
             }
 
         }

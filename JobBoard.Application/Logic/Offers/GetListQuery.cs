@@ -20,7 +20,7 @@ namespace JobBoard.Application.Logic.Offers
     {
         public class Request : IRequest<Result>
         {
-            public Guid? CompanyId { get; set; }
+            public int? CompanyId { get; set; }
             public string? SearchName { get; set; }
             public int? CityId { get; set; }
             public int? MinSalary { get; set; }

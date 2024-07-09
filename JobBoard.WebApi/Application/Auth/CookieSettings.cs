@@ -5,6 +5,7 @@
         public const string CookieName = "auth.token";
 
         public const string AccountIdCookieName = "AccountId";
+        public const string AccountTypeCookieName = "AccountType";
 
         public bool Secure { get; set; } = true;
 

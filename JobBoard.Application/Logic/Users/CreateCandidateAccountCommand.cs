@@ -3,6 +3,7 @@ using JobBoard.Application.Exceptions;
 using JobBoard.Application.Interfaces;
 using JobBoard.Application.Logic.Abstractions;
 using JobBoard.Domain.Entities;
+using JobBoard.Domain.Enums;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -28,7 +29,8 @@ namespace JobBoard.Application.Logic.Users
 
         public class Result
         {
-          public Guid AccountId { get; set; } 
+          public int AccountId { get; set; } 
+          public EnumAccountType AccountType { get => EnumAccountType.CandidateAccount; }
         }
 
         public class Handler : BaseCommandHandler, IRequestHandler<Request, Result>
@@ -58,8 +60,6 @@ namespace JobBoard.Application.Logic.Users
                     };
 
                     
-
-
                     var addedAccount  = await _applicationDbContext.CandidateAccounts.AddAsync(candidateAccount);
                 
                     await _applicationDbContext.SaveChangesAsync();

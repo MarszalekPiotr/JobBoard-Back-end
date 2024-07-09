@@ -1,4 +1,5 @@
 ﻿using JobBoard.Application.Logic.Users;
+using JobBoard.Domain.Enums;
 using JobBoard.Infrastructure.Auth;
 using JobBoard.WebApi.Application.Auth;
 using JobBoard.WebApi.Application.Response;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Microsoft.Identity.Client;
 
 namespace JobBoard.WebApi.Controllers
 {
@@ -91,6 +93,14 @@ namespace JobBoard.WebApi.Controllers
             return Ok(result);
         }
 
+        private void DeleteAccountTypeFromCookie()
+        {
+            Response.Cookies.Delete(CookieSettings.AccountTypeCookieName, new CookieOptions()
+            {
+                HttpOnly = true
+            });
+
+        }
         private void DeleteAccountIdFromCookie()
         {
             Response.Cookies.Delete(CookieSettings.AccountIdCookieName, new CookieOptions()
@@ -120,10 +130,11 @@ namespace JobBoard.WebApi.Controllers
         public async Task<ActionResult> CreateCandidateAccount([FromBody] CreateCandidateAccountCommand.Request model)
         {
             var result = await _mediator.Send(model);
-            SetAccountCookie(result.AccountId); 
+            SetAccountIdCookie(result.AccountId);
+            SetAccountTypeCookie(result.AccountType);
             return Ok(result);
         }
-        private void SetAccountCookie(Guid AccountId)
+        private void SetAccountIdCookie(int AccountId)
         {
             var cookieOption = new CookieOptions()
             {
@@ -147,6 +158,30 @@ namespace JobBoard.WebApi.Controllers
             Response.Cookies.Append(CookieSettings.AccountIdCookieName, AccountId.ToString(), cookieOption);
         }
 
+        private void SetAccountTypeCookie(EnumAccountType accountType)
+        {
+            var cookieOption = new CookieOptions()
+            {
+                HttpOnly = true,
+                Secure = true,
+                Expires = DateTime.Now.AddDays(30),
+                SameSite = SameSiteMode.Lax,
+            };
+
+            if (_cookieSettings != null)
+            {
+                cookieOption = new CookieOptions()
+                {
+                    HttpOnly = cookieOption.HttpOnly,
+                    Expires = cookieOption.Expires,
+                    Secure = _cookieSettings.Value.Secure,
+                    SameSite = _cookieSettings.Value.SameSite,
+                };
+            }
+
+            Response.Cookies.Append(CookieSettings.AccountTypeCookieName, accountType.ToString(), cookieOption);
+        }
+
         [HttpGet]
         public async Task<ActionResult> GetAccountsForCurrentUser()
         {
@@ -161,7 +196,8 @@ namespace JobBoard.WebApi.Controllers
             // useless if?
             if(result != null)
             {
-                SetAccountCookie(model.AccountId);
+                SetAccountIdCookie(model.AccountId);
+                SetAccountTypeCookie(model.AccountType);
             }
             return Ok(result);
         }
@@ -172,7 +208,8 @@ namespace JobBoard.WebApi.Controllers
             var result = await  _mediator.Send(model);
             if(result != null)
             {
-                SetAccountCookie(result.AccountId);
+                SetAccountIdCookie(result.AccountId);
+                SetAccountTypeCookie(result.AccountType);
 
             }
             return Ok(result);

@@ -16,7 +16,7 @@ namespace JobBoard.Domain.Entities
         public required int OfferId { get; set; }
         public Offer Offer { get; set; } = default!;
 
-        public required Guid CandidateAccountId { get; set; }
+        public required int CandidateAccountId { get; set; }
         public CandidateAcccount CandidateAcccount { get; set; } = default!;
         public FormFilling FormFilling { get; set; } = default!;
     }

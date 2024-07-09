@@ -22,7 +22,7 @@ namespace JobBoard.Application.Logic.Users
 
         public class AccountResult
         {
-            public Guid AccountId { get; set; }
+            public int AccountId { get; set; }
             public EnumAccountType AccountType { get; set; }
             public string AccountName { get; set; }
         }

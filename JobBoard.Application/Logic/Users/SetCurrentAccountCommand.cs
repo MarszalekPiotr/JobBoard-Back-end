@@ -3,6 +3,7 @@ using JobBoard.Application.Exceptions;
 using JobBoard.Application.Interfaces;
 using JobBoard.Application.Logic.Abstractions;
 using JobBoard.Domain.Entities;
+using JobBoard.Domain.Enums;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -18,13 +19,15 @@ namespace JobBoard.Application.Logic.Users
         public class Request : IRequest<Result>
         {
 
-            public Guid AccountId { get; set; }
+            public int AccountId { get; set; }
+            public EnumAccountType AccountType { get; set; }
             
         }
 
         public class Result
         {
-            public Guid AccountId { get; set; }
+            public int AccountId { get; set; }
+            public EnumAccountType AccountType { get; set; }
         }
 
         public class Handler : BaseCommandHandler, IRequestHandler<Request, Result>
@@ -41,9 +44,9 @@ namespace JobBoard.Application.Logic.Users
                 var userId = _authenticationDataProvider.GetUserId();
                 if(userId != null)
                 {
-                    if (_currentAccountProvider.AccountBelongsToCurrentUser(request.AccountId))
+                    if (_currentAccountProvider.AccountBelongsToCurrentUser(request.AccountId,request.AccountType))
                     {
-                        return new Result() { AccountId = request.AccountId };
+                        return new Result() { AccountId = request.AccountId ,AccountType = request.AccountType};
                     }
                 }
                 throw new UnauthorizedException();
@@ -54,8 +57,6 @@ namespace JobBoard.Application.Logic.Users
         {
             public Validator()
             {
-                //RuleFor(x => x.AccountId).NotEmpty();
-                //RuleFor(x => x.AccountId).Must(x => x.GetType() == typeof(Guid));
                
 
             }

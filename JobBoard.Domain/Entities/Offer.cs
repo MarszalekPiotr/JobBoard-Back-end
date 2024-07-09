@@ -22,7 +22,7 @@ namespace JobBoard.Domain.Entities
         public required EnumContractType ContractType { get; set; }
 
         public FormDefinition? FormDefinitionJSON { get; set; } 
-        public required Guid CompanyAccountId { get; set; }
+        public required int CompanyAccountId { get; set; }
         public CompanyAccount CompanyAccount { get; set; } = default!;
 
         public int? CityId { get; set; }

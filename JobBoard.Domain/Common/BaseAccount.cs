@@ -8,7 +8,7 @@ namespace JobBoard.Domain.Common
 {
     public abstract  class BaseAccount
     { 
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public required string Name { get; set; }
         public required DateTimeOffset CreationDate { get; set; }
         public string Description { get; set; } = string.Empty;

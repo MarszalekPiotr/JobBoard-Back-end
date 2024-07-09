@@ -1,7 +1,12 @@
-﻿using JobBoard.Application.Interfaces;
+﻿using JobBoard.Application.DTO;
+using JobBoard.Application.Exceptions;
+using JobBoard.Application.Interfaces;
 using JobBoard.Domain.Entities;
 using JobBoard.Domain.Enums;
 using JobBoard.WebApi.Application.Auth;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,68 +29,62 @@ namespace JobBoard.Infrastructure.Auth
             _authenticationDataProvider = authenticationDataProvider;
         }
 
-       public bool AccountBelongsToCurrentUser(Guid accountId)
+       public bool AccountBelongsToCurrentUser(int accountId, EnumAccountType accountType)
         {
             var currentUserId = _authenticationDataProvider.GetUserId();
 
-            if (_applicationDbContext.companyAccountUsers.FirstOrDefault(cas => cas.CompanyAccountId == accountId)?.UserId == currentUserId)
+            if(accountType == EnumAccountType.CompanyAccount)
             {
 
-                return true;
-            }
-            else if (_applicationDbContext.CandidateAccounts.FirstOrDefault(cas => cas.Id == accountId)?.UserId == currentUserId)
-            {
-                return true;
-            }
-            return false;
-        }
-        public async Task<Guid> GetAccountId()
-        {
-            var accountCookie = _httpContextAccessor.HttpContext?.Request.Cookies[CookieSettings.AccountIdCookieName];
-            // check if account belongs to the current user
-            if (Guid.TryParse(accountCookie, out Guid accountId))
-            {
-                if (AccountBelongsToCurrentUser(accountId))
+                if (_applicationDbContext.companyAccountUsers.FirstOrDefault(cas => cas.CompanyAccountId == accountId)?.UserId == currentUserId)
                 {
-                    return accountId;
+                    return true;
                 }
 
             }
-            return Guid.Empty;
-        }
+            else if(accountType == EnumAccountType.CandidateAccount)
+            {
+                if (_applicationDbContext.CandidateAccounts.FirstOrDefault(cas => cas.Id == accountId)?.UserId == currentUserId)
+                {
+                    return true;
+                }
+            }
 
-        public async Task<EnumAccountType> GetAccountType()
+            return false;
+
+
+            
+        }
+        public async Task<Account> GetAccount()
         {
-            Guid accountId = await this.GetAccountId();
-            if(_applicationDbContext.CandidateAccounts.FirstOrDefault(x => x.Id == accountId ) != null) 
+            var accountIdCookieValue = _httpContextAccessor.HttpContext?.Request.Cookies[CookieSettings.AccountIdCookieName];
+            var accountTypeCookieValue = _httpContextAccessor.HttpContext?.Request.Cookies[CookieSettings.AccountTypeCookieName];
+            // check if account belongs to the current user
+            if (int.TryParse(accountIdCookieValue,out int accountId) && Enum.TryParse(accountTypeCookieValue,out EnumAccountType accountType))
             {
-                return EnumAccountType.CandidateAccount;
+                if (AccountBelongsToCurrentUser(accountId,accountType))
+                {
+                    return new Account() { Id = accountId, AccountType = accountType };
+                }
+
             }
-            else if(_applicationDbContext.companyAccounts.FirstOrDefault(x => x.Id == accountId) != null)
-            {
-                return EnumAccountType.CompanyAccount;
-            }
-            return EnumAccountType.AccountNotSelected;
+            throw new UnauthorizedException();
         }
 
         public async  Task<CandidateAcccount> GetCurrentCandidateAccount()
-        {    
-            var accountId = await this.GetAccountId();
-            if(await this.GetAccountType() == EnumAccountType.CandidateAccount)
-            {
-                return _applicationDbContext.CandidateAccounts.FirstOrDefault(x => x.Id == accountId); 
-            }
-            return null;
+        {
+            var account = await this.GetAccount();
+            if(account.AccountType != EnumAccountType.CandidateAccount) { throw new UnauthorizedException(); }
+            return await _applicationDbContext.CandidateAccounts.FirstOrDefaultAsync(cas => cas.Id == account.Id);
+           
+            
         }
 
         public async  Task<CompanyAccount> GetCurrentCompanyAccount()
         {
-            var accountId = await this.GetAccountId();
-            if (await this.GetAccountType() == EnumAccountType.CompanyAccount)
-            {
-                return _applicationDbContext.companyAccounts.FirstOrDefault(x => x.Id == accountId);
-            }
-            return null;
+            var account = await this.GetAccount();
+            if (account.AccountType != EnumAccountType.CompanyAccount) { throw new UnauthorizedException(); }
+            return await _applicationDbContext.companyAccounts.FirstOrDefaultAsync(cas => cas.Id == account.Id);
         }
     }
 }

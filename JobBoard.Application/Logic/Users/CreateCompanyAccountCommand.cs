@@ -3,6 +3,7 @@ using JobBoard.Application.Exceptions;
 using JobBoard.Application.Interfaces;
 using JobBoard.Application.Logic.Abstractions;
 using JobBoard.Domain.Entities;
+using JobBoard.Domain.Enums;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -27,7 +28,9 @@ namespace JobBoard.Application.Logic.Users
 
         public class Result
         {
-            public Guid AccountId { get; set; }
+            public int AccountId { get; set; }
+            // bez setera?
+            public EnumAccountType AccountType { get => EnumAccountType.CompanyAccount; } 
         }
 
         public class Handler : BaseCommandHandler, IRequestHandler<Request, Result>
@@ -55,6 +58,7 @@ namespace JobBoard.Application.Logic.Users
                     };
 
                     var addedCompanyAccount = await _applicationDbContext.companyAccounts.AddAsync(newCompanyAccount);
+                    await _applicationDbContext.SaveChangesAsync();
                     await _applicationDbContext.companyAccountUsers.AddAsync(new CompanyAccountUser() { CompanyAccountId = addedCompanyAccount.Entity.Id, UserId = (int)userId });
                     await _applicationDbContext.SaveChangesAsync();
                     return new Result() { AccountId = addedCompanyAccount.Entity.Id };

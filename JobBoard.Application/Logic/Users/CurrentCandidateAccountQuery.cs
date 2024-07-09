@@ -3,6 +3,7 @@ using JobBoard.Application.Exceptions;
 using JobBoard.Application.Interfaces;
 using JobBoard.Application.Logic.Abstractions;
 using JobBoard.Domain.Entities;
+using JobBoard.Domain.Enums;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -20,9 +21,10 @@ namespace JobBoard.Application.Logic.Users
         }
 
         public class Result
-        {
-           public Guid AccountId { get; set; }
-            public string Name { get; set; }
+        {   
+           public int AccountId { get; set; }
+           public EnumAccountType AccountType { get => EnumAccountType.CandidateAccount; }
+           public string Name { get; set; }
            public required string SurName { get; set; }
            public required DateTimeOffset BirthDate { get; set; }
            public string PhoneNumber { get; set; } = string.Empty;
@@ -39,8 +41,8 @@ namespace JobBoard.Application.Logic.Users
             public async Task<Result> Handle(Request request, CancellationToken cancellationToken)
             {
                 var account = await _currentAccountProvider.GetCurrentCandidateAccount();
-                if (account != null)
-                {
+                
+            
                     return new Result()
                     {
                         AccountId = account.Id,
@@ -49,8 +51,7 @@ namespace JobBoard.Application.Logic.Users
                         BirthDate = account.BirthDate,
                         PhoneNumber = account.PhoneNumber
                     };
-                }
-                throw new UnauthorizedException();
+           
             }
 
         }
