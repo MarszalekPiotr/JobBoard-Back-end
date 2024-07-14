@@ -222,6 +222,13 @@ namespace JobBoard.WebApi.Controllers
             return Ok(result);
         }
 
+        [HttpGet]
+        public async Task<ActionResult> GetCurrentAccount()
+        {
+            var result = await _mediator.Send(new GetCurrentAccontQuery.Request());
+            return Ok(result);
+        }
+
 
 
     }
