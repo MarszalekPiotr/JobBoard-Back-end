@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace JobBoard.Domain.FormDefinitionSchema
 {
-    public class DoubleFieldDefnition : BaseFieldDefinition
+    public class DoubleFieldDefnition : FieldDefinition
     {   
         public DoubleFieldDefnition()
         {

@@ -43,10 +43,14 @@ namespace JobBoard.Application.Logic.Users
 
 
             public async Task<Result> Handle(Request request, CancellationToken cancellationToken)
-            {
+            {   
+                // tu raczej przniesc do authentication data provider ze jak null to exception?
                 var currentUserId = _authenticationDataProvider.GetUserId();
                 if(currentUserId != null)
                 {
+
+                    if (_applicationDbContext.CandidateAccounts.FirstOrDefault(ca => ca.UserId == currentUserId) != null) { throw new ErrorException("This user has already created candidate account"); }
+
                     var candidateAccount = new CandidateAcccount()
                     {
                         Name = request.Name,

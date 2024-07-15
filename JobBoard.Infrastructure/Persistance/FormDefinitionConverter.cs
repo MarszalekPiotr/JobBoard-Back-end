@@ -23,7 +23,7 @@ namespace JobBoard.Infrastructure.Persistance
                 /// foreach i lista ktora zwracamy na koncu ?
                 /// 
 
-                var fields = new List<BaseFieldDefinition>();
+                var fields = new List<FieldDefinition>();
 
 
 
@@ -32,7 +32,7 @@ namespace JobBoard.Infrastructure.Persistance
                    // var typeString = element.GetProperty("EnumFieldType").GetString();
                     var typeString = (EnumFieldType)(element.GetProperty("EnumFieldType").GetInt64());
                     Enum.TryParse(typeString.ToString(), out EnumFieldType fieldType);
-                    BaseFieldDefinition result;
+                    FieldDefinition result;
 
                     switch (fieldType)
                     {

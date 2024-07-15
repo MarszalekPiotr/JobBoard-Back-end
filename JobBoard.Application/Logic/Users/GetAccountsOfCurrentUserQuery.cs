@@ -52,7 +52,7 @@ namespace JobBoard.Application.Logic.Users
                     var companyAccounts = _applicationDbContext.companyAccountUsers.Where(cau => cau.UserId == userId)?
                         .Select(cau => new AccountResult() { AccountId = cau.CompanyAccountId, AccountType = EnumAccountType.CompanyAccount, AccountName = _applicationDbContext.companyAccounts.FirstOrDefault(x => x.Id == cau.CompanyAccountId).Name?? "" });
 
-                    var allAccounts = (candidateAccounts?.Union(companyAccounts)?.ToList()) ?? new List<AccountResult>();
+                    var allAccounts = (candidateAccounts?.Concat(companyAccounts)?.ToList()) ?? new List<AccountResult>();
                     return new Result() { accountResults = allAccounts };
                 }
                 throw new UnauthorizedException();

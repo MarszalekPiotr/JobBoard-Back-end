@@ -23,7 +23,7 @@ namespace JobBoard.Application.Logic.Users
             public string Name { get; set; } = string.Empty;
             public string Description { get; set; } = string.Empty;
             public string ContactEmail { get; set; } = string.Empty;
-            public string NIP { get; set; } = string.Empty; 
+            
         }
 
         public class Result
@@ -51,7 +51,7 @@ namespace JobBoard.Application.Logic.Users
                     {
                         CreationDate = DateTime.UtcNow,
                         ContactEmail = request.ContactEmail,
-                        NIP = request.NIP,
+                       
                         Name = request.Name,
                         Description = request.Description
 
@@ -75,8 +75,7 @@ namespace JobBoard.Application.Logic.Users
                 RuleFor(x => x.ContactEmail).NotEmpty();
                 RuleFor(x => x.ContactEmail).EmailAddress();
                 RuleFor(x => x.Name).NotEmpty().MinimumLength(3);
-                RuleFor(x => x.NIP).NotEmpty().MinimumLength(10).MaximumLength(10);
-                RuleFor(x => x.NIP).Must(x => x.All(e => int.TryParse(e.ToString(), out int tmp)));
+                
 
             }
         }

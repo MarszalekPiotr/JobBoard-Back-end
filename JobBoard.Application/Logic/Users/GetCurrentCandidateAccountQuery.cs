@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace JobBoard.Application.Logic.Users
 {
-    public static  class CurrentCandidateAccountQuery
+    public static  class GetCurrentCandidateAccountQuery
     {
         public class Request : IRequest<Result>
         {

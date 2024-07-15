@@ -83,6 +83,7 @@ namespace JobBoard.WebApi.Controllers
             var result = await  _mediator.Send(new LogoutCommand.Request());
             DeleteTokenFromCookie();
             DeleteAccountIdFromCookie();
+            DeleteAccountTypeFromCookie();
             return Ok(result);
         }
 
@@ -120,7 +121,7 @@ namespace JobBoard.WebApi.Controllers
         [HttpGet]
         public async Task<ActionResult> GetCurrentCandidateAccount()
         {
-            var result = await _mediator.Send(new CurrentCandidateAccountQuery.Request());
+            var result = await _mediator.Send(new GetCurrentCandidateAccountQuery.Request());
             return Ok(result);
         }
 

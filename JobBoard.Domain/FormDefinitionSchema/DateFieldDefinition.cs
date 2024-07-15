@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace JobBoard.Domain.FormDefinitionSchema
 {
-    public class DateFieldDefinition : BaseFieldDefinition
+    public class DateFieldDefinition : FieldDefinition
     {  
         public DateFieldDefinition() 
         {

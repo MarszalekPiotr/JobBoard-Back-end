@@ -20,7 +20,7 @@ namespace JobBoard.Domain.Entities
         public required  int MaxSalary { get; set;}
         public required EnumWorkMode WorkingMode { get; set; }
         public required EnumContractType ContractType { get; set; }
-
+        public required EnumOfferStatus OfferStatus { get; set; }
         public FormDefinition? FormDefinitionJSON { get; set; } 
         public required int CompanyAccountId { get; set; }
         public CompanyAccount CompanyAccount { get; set; } = default!;

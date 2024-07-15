@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace JobBoard.Domain.FormDefinitionSchema
 {
-    public abstract class BaseFieldDefinition
+    public abstract class FieldDefinition
     {
         public string Name { get; set; } = string.Empty;
         public bool IsRequired { get; set; }

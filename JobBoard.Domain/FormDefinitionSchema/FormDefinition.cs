@@ -8,6 +8,6 @@ namespace JobBoard.Domain.FormDefinitionSchema
 {
     public class FormDefinition
     {
-        public List<BaseFieldDefinition> FieldDefinitions { get; set; } = new List<BaseFieldDefinition>();
+        public List<FieldDefinition> FieldDefinitions { get; set; } = new List<FieldDefinition>();
     }
 }

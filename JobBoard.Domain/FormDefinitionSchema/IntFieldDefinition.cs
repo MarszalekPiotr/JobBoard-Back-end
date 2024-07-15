@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace JobBoard.Domain.FormDefinitionSchema
 {
-    public class IntFieldDefinition : BaseFieldDefinition
+    public class IntFieldDefinition : FieldDefinition
     {
         public IntFieldDefinition()
         {

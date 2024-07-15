@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace JobBoard.Domain.FormDefinitionSchema
 {
-    public class BoolFieldDefinition : BaseFieldDefinition
+    public class BoolFieldDefinition : FieldDefinition
     {
         public BoolFieldDefinition() 
         {

@@ -13,9 +13,9 @@ namespace JobBoard.Infrastructure.Persistance
 {  /// <summary>
 ///  zmienic base fild na form definition
 /// </summary>
-    public class BaseFieldDefinitionDatabaseConverter : JsonConverter<BaseFieldDefinition>
+    public class BaseFieldDefinitionDatabaseConverter : JsonConverter<FieldDefinition>
     {
-        public override BaseFieldDefinition Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override FieldDefinition Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             using (JsonDocument doc = JsonDocument.ParseValue(ref reader))
             {
@@ -31,19 +31,19 @@ namespace JobBoard.Infrastructure.Persistance
                  
                 Dictionary<EnumFieldType,Type> typeEnumDictionary = new Dictionary<EnumFieldType,Type>();
              
-              var types =  Assembly.GetAssembly(typeof(BaseFieldDefinition)).GetTypes()
-                    .Where(t => t.IsSubclassOf(typeof(BaseFieldDefinition)));
+              var types =  Assembly.GetAssembly(typeof(FieldDefinition)).GetTypes()
+                    .Where(t => t.IsSubclassOf(typeof(FieldDefinition)));
 
                 foreach (Type type in types)
                 {
-                    var instance = (BaseFieldDefinition)Activator.CreateInstance(type);
+                    var instance = (FieldDefinition)Activator.CreateInstance(type);
                     EnumFieldType enumFieldType = instance.EnumFieldType;
                     typeEnumDictionary.Add(enumFieldType, type);
                 }
 
 
 
-              var  result = (BaseFieldDefinition)JsonSerializer.Deserialize(doc.RootElement.GetRawText(), typeEnumDictionary[fieldType], options);
+              var  result = (FieldDefinition)JsonSerializer.Deserialize(doc.RootElement.GetRawText(), typeEnumDictionary[fieldType], options);
 
 
                 ///
@@ -80,7 +80,7 @@ namespace JobBoard.Infrastructure.Persistance
             }
         }
 
-        public override void Write(Utf8JsonWriter writer, BaseFieldDefinition value, JsonSerializerOptions options)
+        public override void Write(Utf8JsonWriter writer, FieldDefinition value, JsonSerializerOptions options)
         {
             JsonSerializer.Serialize(writer, (object)value, value.GetType(), options);
         }

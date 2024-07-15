@@ -27,7 +27,7 @@ namespace JobBoard.Application.Logic.Users
             public string Name { get; set; }
             public string Description { get; set; } = string.Empty;
             public string ContactEmail { get; set; } = string.Empty;
-            public required string NIP { get; set; }
+           
 
         }
 
@@ -48,7 +48,7 @@ namespace JobBoard.Application.Logic.Users
                         AccountId = account.Id,
                         Name = account.Name,
                         Description = account.Description,
-                        NIP = account.NIP,
+                       
                         ContactEmail = account.ContactEmail
                        
                     };

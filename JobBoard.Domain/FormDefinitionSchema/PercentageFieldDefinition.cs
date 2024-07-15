@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace JobBoard.Domain.FormDefinitionSchema
 {
-    public class PercentageFieldDefinition : BaseFieldDefinition
+    public class PercentageFieldDefinition : FieldDefinition
     {   
         public PercentageFieldDefinition()
         {

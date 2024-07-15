@@ -8,4 +8,5 @@ namespace JobBoard.Domain.Enums
 {
    public enum EnumWorkMode { Office = 1, Hybrid = 2, Remotely = 3 };
    public enum EnumContractType { Internship  = 1, EmploymentContract = 2, B2B = 3, ComissionAgreement = 4 , practices = 5};
+   public enum EnumOfferStatus { Draft = 1, Archive = 2, Deleted = 3, Published = 4 };
 }

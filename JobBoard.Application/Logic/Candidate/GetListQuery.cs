@@ -12,9 +12,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static JobBoard.Application.Logic.Offers.GetListQuery.Result;
+using static JobBoard.Application.Logic.Candidate.GetListQuery.Result;
 
-namespace JobBoard.Application.Logic.Offers
+namespace JobBoard.Application.Logic.Candidate
 {
     public static class GetListQuery
     {
@@ -58,7 +58,7 @@ namespace JobBoard.Application.Logic.Offers
 
         public class Handler : BaseQueryHandler, IRequestHandler<Request, Result>
         {
-            public Handler(ICurrentAccountProvider currentAccountProvider, IApplicationDbContext applicationDbContext, IAuthenticationDataProvider authenticationDataProvider)
+            public Handler(ICurrentAccountProvider currentAccountProvider, IApplicationDbContext applicationDbContext)
                 : base(currentAccountProvider, applicationDbContext)
             {
             }
@@ -115,7 +115,7 @@ namespace JobBoard.Application.Logic.Offers
                 var offerListDto = offers.Select(offer => new Result.Offer
                 {
                     Name = offer.Name,
-                    CityDTO = GetCity(offer.CityId,_applicationDbContext),
+                    CityDTO = GetCity(offer.CityId, _applicationDbContext),
                     Location = offer.Address,
                     MinSalary = offer.MinSalary,
                     MaxSalary = offer.MaxSalary,
@@ -124,7 +124,7 @@ namespace JobBoard.Application.Logic.Offers
                     // tu ewentualnie osobne metody i zwracanie pustego strninga
                     CompanyName = _applicationDbContext.companyAccounts.FirstOrDefault(ca => ca.Id == offer.CompanyAccountId).Name ?? string.Empty,
                     CategoryName = _applicationDbContext.Categories.FirstOrDefault(c => c.Id == offer.CategoryId).Name,
-                    Tags = GetTagsForOffer(offer.Id,_applicationDbContext)
+                    Tags = GetTagsForOffer(offer.Id, _applicationDbContext)
                 }).ToList();
 
                 return new Result { OfferListDTO = offerListDto };
@@ -141,12 +141,9 @@ namespace JobBoard.Application.Logic.Offers
             }
 
             private static List<TagDTO> GetTagsForOffer(int offerId, IApplicationDbContext applicationDbContext)
-            
-              {   // to delete 
-                var category = applicationDbContext.Categories.ToList();
-                var category2 = applicationDbContext.Categories.FirstOrDefault(c => c.Id == applicationDbContext.Offers.FirstOrDefault(o => o.Id == offerId).CategoryId);
 
-                var offerTags = applicationDbContext.OfferTags.ToList();
+            {
+
 
                 var tags = applicationDbContext.OfferTags
                     .Join(applicationDbContext.Tags, offerTag => offerTag.TagId, tag => tag.Id, (offerTag, tag) => new { offerTag, tag })
