@@ -115,10 +115,11 @@ namespace JobBoard.Application.Logic.Company
 
             private async Task UpdateOfferTags(Request request, int offerId)
             {
+                var offer = _applicationDbContext.Offers.FirstOrDefault(off => off.Id == offerId);
                 if (request.Id.HasValue)
                 {
 
-                    var presentTagIds = _applicationDbContext.OfferTags.Where(ot => ot.OfferId == offerId).Select(ot => ot.TagId);
+                    var presentTagIds = offer.OfferTags.Select(ot => ot.TagId).ToList();
                     request.TagIds.ForEach(ti =>
                     {
                         if (!presentTagIds.Contains(ti))
@@ -128,11 +129,11 @@ namespace JobBoard.Application.Logic.Company
 
                     }
                     );
-                    presentTagIds.ForEachAsync(pti =>
+                    presentTagIds.ForEach(pti =>
                     {
                         if (!request.TagIds.Contains(pti))
                         {
-                            var offerTagsToDelete = _applicationDbContext.OfferTags.Where(ot => ot.OfferId == offerId && ot.TagId == pti);
+                            var offerTagsToDelete = offer.OfferTags.Where(ot =>  ot.TagId == pti);
                             _applicationDbContext.OfferTags.RemoveRange(offerTagsToDelete);
                         }
                     });
