@@ -12,12 +12,24 @@ namespace JobBoard.Application.Validators
 {
     public static class CreateFormValidator
     {
-        public static IRuleBuilderOptions<T, FormDefinition> FormDefinitionCorrect<T>(
+        public static IRuleBuilderOptions<T, FormDefinition> FormDefinitionFieldNameNotEmpty<T>(
             this IRuleBuilder<T, FormDefinition> ruleBuilder)
         {
-            return  ruleBuilder.ChildRules(x => x.RuleForEach(x => x.FieldDefinitions).ChildRules(x => x.RuleFor(x => x.Name).NotEmpty()));
+            return  ruleBuilder.ChildRules(x => x.RuleForEach(x => x.FieldDefinitions)
+            .ChildRules(x => x.RuleFor(x => x.Name).NotEmpty().WithMessage("Name of Field Cannot be empty")));
+
+            
            // return ruleBuilder.Must(ValidateForm);
                 
+        }
+
+        public static IRuleBuilderOptions<T, FormDefinition> FormDefinitionFieldNameLongerThan<T>(
+           this IRuleBuilder<T, FormDefinition> ruleBuilder, int minLength)
+        {
+            return ruleBuilder.ChildRules(x => x.RuleForEach(x => x.FieldDefinitions)
+            .ChildRules(x => x.RuleFor(x => x.Name).MinimumLength(minLength).WithMessage($"Name of Field must be longer than {minLength}")));
+
+
         }
 
 

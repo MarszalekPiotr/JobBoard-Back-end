@@ -162,9 +162,11 @@ namespace JobBoard.Application.Logic.Company
                 RuleFor(x => x.WorkingMode).NotEmpty();
                 RuleFor(x => x.ContractType).NotEmpty();
                 RuleFor(x => x.CategoryId).NotEmpty();
-                RuleFor(x => x.FormDefinitionJSON).FormDefinitionCorrect();
+                RuleFor(x => x.FormDefinitionJSON).FormDefinitionFieldNameNotEmpty().FormDefinitionFieldNameLongerThan(5);
 
-                
+
+
+
             }
         }
 

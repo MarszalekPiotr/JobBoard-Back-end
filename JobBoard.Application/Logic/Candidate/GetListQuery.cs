@@ -10,6 +10,7 @@ using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using static JobBoard.Application.Logic.Candidate.GetListQuery.Result;
@@ -64,8 +65,31 @@ namespace JobBoard.Application.Logic.Candidate
             }
 
             public async Task<Result> Handle(Request request, CancellationToken cancellationToken)
-            {
+            {   
+                //Q2: Jak tę paginację tu zrobić z tym page0?
                 var offers = _applicationDbContext.Offers.AsQueryable();
+                offers = FilterOffers(offers, request);
+             
+                var offerListDto = offers.ToList().Select(offer => new Result.Offer
+                {
+                    Name = offer.Name,
+                    CityDTO = GetCity(offer.CityId),
+                    Location = offer.Address,
+                    MinSalary = offer.MinSalary,
+                    MaxSalary = offer.MaxSalary,
+                    WorkingMode = offer.WorkingMode,
+                    ContractType = offer.ContractType,
+                    // tu ewentualnie osobne metody i zwracanie pustego strninga
+                    CompanyName = _applicationDbContext.companyAccounts.FirstOrDefault(ca => ca.Id == offer.CompanyAccountId).Name ?? string.Empty,
+                    CategoryName = _applicationDbContext.Categories.FirstOrDefault(c => c.Id == offer.CategoryId).Name,
+                    Tags = GetTagsForOffer(offer.Id)
+                }).ToList();
+
+                return new Result { OfferListDTO = offerListDto };
+            }
+
+            private IQueryable<Domain.Entities.Offer> FilterOffers(IQueryable<Domain.Entities.Offer> offers, Request request)
+            {
 
                 if (request.CategoryId != null)
                 {
@@ -112,42 +136,25 @@ namespace JobBoard.Application.Logic.Candidate
                     offers = offers.Where(o => o.OfferTags.All(oft => request.TagIds.Contains(oft.TagId)));
                 }
 
-
-                var offerListDto = offers.Select(offer => new Result.Offer
-                {
-                    Name = offer.Name,
-                    CityDTO = GetCity(offer.CityId, _applicationDbContext),
-                    Location = offer.Address,
-                    MinSalary = offer.MinSalary,
-                    MaxSalary = offer.MaxSalary,
-                    WorkingMode = offer.WorkingMode,
-                    ContractType = offer.ContractType,
-                    // tu ewentualnie osobne metody i zwracanie pustego strninga
-                    CompanyName = _applicationDbContext.companyAccounts.FirstOrDefault(ca => ca.Id == offer.CompanyAccountId).Name ?? string.Empty,
-                    CategoryName = _applicationDbContext.Categories.FirstOrDefault(c => c.Id == offer.CategoryId).Name,
-                    Tags = GetTagsForOffer(offer.Id, _applicationDbContext)
-                }).ToList();
-
-                return new Result { OfferListDTO = offerListDto };
+                return offers;
             }
-
-            private static Result.Offer.City GetCity(int? cityId, IApplicationDbContext applicationDbContext)
+            private  Result.Offer.City GetCity(int? cityId)
             {
                 if (!cityId.HasValue) return null;
 
-                var city = applicationDbContext.Cities.FirstOrDefault(c => c.Id == cityId);
+                var city = _applicationDbContext.Cities.FirstOrDefault(c => c.Id == cityId);
                 if (city == null) return null;
 
                 return new Result.Offer.City { Name = city.Name, Id = city.Id };
             }
 
-            private static List<TagDTO> GetTagsForOffer(int offerId, IApplicationDbContext applicationDbContext)
+            private  List<TagDTO> GetTagsForOffer(int offerId)
 
             {
 
 
-                var tags = applicationDbContext.OfferTags
-                    .Join(applicationDbContext.Tags, offerTag => offerTag.TagId, tag => tag.Id, (offerTag, tag) => new { offerTag, tag })
+                var tags = _applicationDbContext.OfferTags
+                    .Join(_applicationDbContext.Tags, offerTag => offerTag.TagId, tag => tag.Id, (offerTag, tag) => new { offerTag, tag })
                     .Where(joined => joined.offerTag.OfferId == offerId)
                     .Select(joined => new TagDTO { Name = joined.tag.Name, IconPath = "default" })
                     .ToList();
