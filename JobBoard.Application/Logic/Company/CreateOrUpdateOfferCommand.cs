@@ -10,6 +10,7 @@ using JobBoard.Domain.Entities;
 using JobBoard.Domain.Enums;
 using JobBoard.Domain.FormDefinitionSchema;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -63,7 +64,7 @@ namespace JobBoard.Application.Logic.Company
                 Offer offer = null;
                 if (request.Id.HasValue)
                 {
-                    offer = _applicationDbContext.Offers.FirstOrDefault(o => o.Id == (int)request.Id && o.CompanyAccountId == companyAccount.Id);
+                    offer = companyAccount.Offers.FirstOrDefault(off => off.Id == (int)request.Id);
                     if (offer == null)
                     {
                         throw new UnauthorizedException();
@@ -104,6 +105,7 @@ namespace JobBoard.Application.Logic.Company
                     };
                     var offerEntity = await _applicationDbContext.Offers.AddAsync(offer, cancellationToken);
                     await _applicationDbContext.SaveChangesAsync(cancellationToken);
+                    // Q:1 czy jak usunę ten save chabges async to nie sprawi to ze nie bede mial dostepu do offerId? bo potrzebuje tego dalej
                     await UpdateOfferTags(request, offerEntity.Entity.Id);
 
                 }
@@ -116,32 +118,37 @@ namespace JobBoard.Application.Logic.Company
                 if (request.Id.HasValue)
                 {
 
-                    var offerTags = _applicationDbContext.OfferTags.Where(ot => ot.OfferId == offerId);
-                    _applicationDbContext.OfferTags.RemoveRange(offerTags);
+                    var presentTagIds = _applicationDbContext.OfferTags.Where(ot => ot.OfferId == offerId).Select(ot => ot.TagId);
+                    request.TagIds.ForEach(ti =>
+                    {
+                        if (!presentTagIds.Contains(ti))
+                        {
+                            _applicationDbContext.OfferTags.Add(new OfferTag() { OfferId = offerId, TagId = ti });
+                        }
 
+                    }
+                    );
+                    presentTagIds.ForEachAsync(pti =>
+                    {
+                        if (!request.TagIds.Contains(pti))
+                        {
+                            var offerTagsToDelete = _applicationDbContext.OfferTags.Where(ot => ot.OfferId == offerId && ot.TagId == pti);
+                            _applicationDbContext.OfferTags.RemoveRange(offerTagsToDelete);
+                        }
+                    });
                 }
-                request.TagIds.ForEach(ti => _applicationDbContext.OfferTags.Add(new OfferTag() { OfferId = offerId, TagId = ti }));
-                await _applicationDbContext.SaveChangesAsync();
+                else
+                {
+                    request.TagIds.ForEach(ti => _applicationDbContext.OfferTags.Add(new OfferTag() { OfferId = offerId, TagId = ti }));
+                    await _applicationDbContext.SaveChangesAsync();
+                }
             }
         }
 
         public class Validator : AbstractValidator<Request>
         {
 
-            //public int? Id { get; set; }
-            //public string Name { get; set; } = string.Empty;
-            //public string Description { get; set; } = string.Empty;
-            //public string City { get; set; } = string.Empty;
-            //public string Location { get; set; } = string.Empty;
-            //public int MinSalary { get; set; }
-            //public int MaxSalary { get; set; }
-            //public EnumWorkMode WorkingMode { get; set; }
-            //public EnumContractType ContractType { get; set; }
-
-            //public FormDefinition? FormDefinitionJSON { get; set; }
-            //public int CategoryId { get; set; }
-
-            //public List<int> TagIds { get; set; } = new List<int>() { };
+          
 
             public Validator()
             {
@@ -156,10 +163,7 @@ namespace JobBoard.Application.Logic.Company
                 RuleFor(x => x.CategoryId).NotEmpty();
                 RuleFor(x => x.FormDefinitionJSON).FormDefinitionCorrect();
 
-
-                /// tags only int collection
-                /// form Definition if it is serializable -- simple try catch? how may i validate it?
-                ///
+                
             }
         }
 
