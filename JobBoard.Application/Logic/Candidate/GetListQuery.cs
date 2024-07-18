@@ -112,6 +112,7 @@ namespace JobBoard.Application.Logic.Candidate
                     offers = offers.Where(o => o.OfferTags.All(oft => request.TagIds.Contains(oft.TagId)));
                 }
 
+
                 var offerListDto = offers.Select(offer => new Result.Offer
                 {
                     Name = offer.Name,

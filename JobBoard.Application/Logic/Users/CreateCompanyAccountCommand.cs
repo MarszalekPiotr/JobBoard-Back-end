@@ -19,7 +19,6 @@ namespace JobBoard.Application.Logic.Users
         public class Request : IRequest<Result>
         {
 
-
             public string Name { get; set; } = string.Empty;
             public string Description { get; set; } = string.Empty;
             public string ContactEmail { get; set; } = string.Empty;
@@ -29,7 +28,7 @@ namespace JobBoard.Application.Logic.Users
         public class Result
         {
             public int AccountId { get; set; }
-            // bez setera?
+            
             public EnumAccountType AccountType { get => EnumAccountType.CompanyAccount; } 
         }
 
